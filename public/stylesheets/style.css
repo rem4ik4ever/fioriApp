@@ -1,8 +1,122 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+@font-face {
+  font-family: UniversalMI;
+  src: url("fonts/UniverseMediumItalic.ttf"); }
 
-a {
-  color: #00B7FF;
-}
+html {
+  height: 100%; }
+  html body {
+    color: black;
+    background-image: url(../images/background2.jpg);
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    font-family: UniversalMI, sans-serif; }
+
+.main {
+  width: 100%;
+  min-width: 1200px;
+  min-height: 650px;
+  height: 100%; }
+  .main .view {
+    height: inherit; }
+    .main .view .navigation {
+      height: 100%;
+      padding: 2% 0 0 0; }
+      .main .view .navigation .calendar-container {
+        width: 30%;
+        background-color: #628DD3;
+        margin: 0 auto 0 auto;
+        border: 1px solid #4C4C4C;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        -ms-border-radius: 5px;
+        -o-border-radius: 5px;
+        border-radius: 5px;
+        -moz-box-shadow: 2px 2px 2px 0 black;
+        -webkit-box-shadow: 2px 2px 2px 0 black;
+        box-shadow: 2px 2px 2px 0 black; }
+    .main .view .registration-list {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      min-width: 1200px; }
+      .main .view .registration-list .table {
+        height: 100%;
+        width: 80%;
+        margin: 0 auto 0 auto;
+        background-color: #EBEBEB;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        border-top: 2px solid #C7B4B4;
+        border-left: 2px solid #C7B4B4;
+        border-right: 2px solid #C7B4B4; }
+        .main .view .registration-list .table .num {
+          width: 3%; }
+        .main .view .registration-list .table .client {
+          width: 30%; }
+        .main .view .registration-list .table .type {
+          width: 20%; }
+        .main .view .registration-list .table .master {
+          width: 30%; }
+        .main .view .registration-list .table .time {
+          width: 17%; }
+        .main .view .registration-list .table .list-controls {
+          font-size: 18px;
+          float: right; }
+          .main .view .registration-list .table .list-controls i {
+            cursor: pointer; }
+          .main .view .registration-list .table .list-controls i:hover {
+            color: #799ADE; }
+        .main .view .registration-list .table table {
+          width: 100%;
+          padding: 0;
+          margin: 0;
+          font-size: 1.1em; }
+          .main .view .registration-list .table table .table-controls {
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            height: 40px;
+            /* Chrome 10+,Safari */
+            background: -webkit-linear-gradient(top, #cccccc 1%, #e6e6e6 48%, #cccccc 99%);
+            /* Firefox 4+ */
+            background: -moz-linear-gradient(top, #cccccc 1%, #e6e6e6 48%, #cccccc 99%);
+            /* Opera */
+            background: -o-linear-gradient(top, #cccccc 1%, #e6e6e6 48%, #cccccc 99%);
+            /* IE 10+ */
+            background: -ms-linear-gradient(top, #cccccc 1%, #e6e6e6 48%, #cccccc 99%);
+            /* W3C */
+            background: -linear-gradient(top, #cccccc 1%, #e6e6e6 48%, #cccccc 99%); }
+          .main .view .registration-list .table table tbody tr td .inner-table {
+            height: 520px;
+            padding: 0 0 120px 0;
+            overflow: auto; }
+            .main .view .registration-list .table table tbody tr td .inner-table table .entry {
+              border-bottom: 1px solid #C2C2C2; }
+              .main .view .registration-list .table table tbody tr td .inner-table table .entry .entry-controls {
+                float: right; }
+                .main .view .registration-list .table table tbody tr td .inner-table table .entry .entry-controls i {
+                  font-size: 21px;
+                  opacity: 0;
+                  -webkit-transition: opacity 300ms ease;
+                  -moz-transition: opacity 300ms ease;
+                  -ms-transition: opacity 300ms ease;
+                  -o-transition: opacity 300ms ease;
+                  transition: opacity 300ms ease;
+                  cursor: pointer;
+                  margin-right: 10px; }
+            .main .view .registration-list .table table tbody tr td .inner-table table .entry:hover {
+              background-color: #B1B1B1;
+              -webkit-transition: background-color 300ms ease;
+              -moz-transition: background-color 300ms ease;
+              -ms-transition: background-color 300ms ease;
+              -o-transition: background-color 300ms ease;
+              transition: background-color 300ms ease;
+              color: #ffffff; }
+              .main .view .registration-list .table table tbody tr td .inner-table table .entry:hover .entry-controls i {
+                opacity: 1;
+                -webkit-transition: opacity 300ms ease;
+                -moz-transition: opacity 300ms ease;
+                -ms-transition: opacity 300ms ease;
+                -o-transition: opacity 300ms ease;
+                transition: opacity 300ms ease; }

@@ -1,7 +1,15 @@
 doctype 5
-html
+html(ng-app="fioriApp")
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/calendar.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.css')
+    link(rel='stylesheet', href='/stylesheets/ionicons.css')
+    script(src="lib/angular.js")
+    script(src="lib/angular-route.js")
+    script(src="lib/jquery-1.9.1.js")
+    script(src="lib/jquery-ui-1.10.3.custom.js")
+    script(src="app/app.js")
   body
     block content

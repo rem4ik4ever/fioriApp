@@ -1,0 +1,170 @@
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+       -o-border-radius: $radius;
+          border-radius: $radius;
+}
+@mixin box-shadow($properties){
+  -moz-box-shadow:    $properties;
+  -webkit-box-shadow: $properties;
+  box-shadow:         $properties;
+}
+@mixin transition($property){
+  -webkit-transition: $property;
+     -moz-transition: $property;
+      -ms-transition: $property;
+       -o-transition: $property;
+          transition: $property;
+}
+@font-face{
+  font-family: UniversalMI;
+  src: url('fonts/UniverseMediumItalic.ttf');
+}
+html{
+  body{
+  	color: black;
+    background-image: url(../images/background2.jpg);   // <- blue
+    // background-image: url(../images/background.jpg);  //<- orange
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    font-family: UniversalMI, sans-serif;
+  }
+  height: 100%;
+}
+
+.main{
+  width: 100%;
+  min-width: 1200px;
+  min-height: 650px;
+  height: 100%;
+  .view{
+    height: inherit;
+    .navigation{
+      height: 100%;
+      padding: 2% 0 0 0 ;
+      .calendar-container{
+          width: 30%;
+          background-color: #628DD3;    //<- blue
+          // background-color: #E48148; //<- orange
+          margin: 0 auto 0 auto;
+          border: 1px solid #4C4C4C;
+          @include border-radius(5px);
+          @include box-shadow(2px 2px 2px 0 #000000);
+      }
+    }
+    .registration-list{
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      min-width: 1200px;
+      // height: 60%;
+      // margin: 20px auto 0 auto;
+      // @include border-radius(12px);
+      .table{
+        height: 100%;
+        width: 80%;
+        margin: 0 auto 0 auto;
+        background-color: #EBEBEB;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        border-top: 2px solid #C7B4B4;
+        border-left: 2px solid #C7B4B4;
+        border-right: 2px solid #C7B4B4;
+        // @include box-shadow(inset 0px 0px 10px #000000);
+        .num{
+          width: 3%;
+        }
+        .client{
+          width: 30%;
+        }
+        .type{
+          width: 20%;
+        }
+        .master{
+          width: 30%;
+        }
+        .time{
+          width: 17%;
+        }
+        .list-controls{
+          font-size: 18px;
+          float: right;
+          i{
+            cursor: pointer;
+          }
+          i:hover{
+            color: #799ADE;
+          }
+        }
+        table{
+          width: 100%;
+          padding: 0;
+          margin: 0;
+          font-size: 1.1em;
+          .table-controls{
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            height: 40px;
+            /* Chrome 10+,Safari */
+            background : -webkit-linear-gradient(top, rgb(204, 204, 204) 01%, rgb(230, 230, 230) 48%, rgb(204, 204, 204) 99%);
+
+            /* Firefox 4+ */ 
+            background : -moz-linear-gradient(top, rgb(204, 204, 204) 01%, rgb(230, 230, 230) 48%, rgb(204, 204, 204) 99%);
+
+            /* Opera */
+            background : -o-linear-gradient(top, rgb(204, 204, 204) 01%, rgb(230, 230, 230) 48%, rgb(204, 204, 204) 99%);
+
+            /* IE 10+ */
+            background : -ms-linear-gradient(top, rgb(204, 204, 204) 01%, rgb(230, 230, 230) 48%, rgb(204, 204, 204) 99%); 
+
+            /* W3C */
+            background : -linear-gradient(top, rgb(204, 204, 204) 01%, rgb(230, 230, 230) 48%, rgb(204, 204, 204) 99%);
+          }
+          tbody{
+            tr{
+              td{
+                // padding: 0;
+                .inner-table{
+                  // min-height: 200px;
+                  // max-height: 520px;
+                  height: 520px;
+                  padding: 0 0 120px 0;
+                  overflow: auto;
+                  table{
+                    .entry{
+                      border-bottom: 1px solid #C2C2C2;
+                      .entry-controls{
+                        float: right;
+                        i{
+                          font-size: 21px;
+                          opacity: 0;
+                          @include transition(opacity 300ms ease);
+                          cursor: pointer;
+                          margin-right: 10px;
+                        }
+                      }
+                    }
+                    .entry:hover{
+                      background-color: #B1B1B1;
+                      @include transition(background-color 300ms ease); 
+                      color: #ffffff;
+                      .entry-controls{
+                        i{
+                          opacity: 1;
+                          @include transition(opacity 300ms ease);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
