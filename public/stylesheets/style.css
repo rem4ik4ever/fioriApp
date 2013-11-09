@@ -1,6 +1,7 @@
 @font-face {
   font-family: UniversalMI;
-  src: url("fonts/UniverseMediumItalic.ttf"); }
+  src: url("fonts/UniverseMediumItalic.ttf");
+  font-style: normal; }
 
 html {
   height: 100%; }
@@ -11,46 +12,109 @@ html {
     padding: 0;
     margin: 0;
     overflow: hidden;
-    font-family: UniversalMI, sans-serif; }
+    font-family: sans-serif;
+    min-width: 1327px;
+    min-height: 650px; }
+
+.navigation {
+  width: 100%;
+  background-color: #EBEBEB;
+  display: block;
+  padding: 10px 0 10px 0; }
+  .navigation ul {
+    margin: 0;
+    list-style: none;
+    width: 100%;
+    display: table; }
+    .navigation ul a {
+      text-decoration: none; }
+    .navigation ul li {
+      display: inline-block;
+      font-size: 1.1em;
+      text-align: center;
+      width: auto;
+      display: table-cell; }
+      .navigation ul li i {
+        font-size: 50px; }
+      .navigation ul li span {
+        display: block; }
 
 .main {
-  width: 100%;
-  min-width: 1200px;
-  min-height: 650px;
-  height: 100%; }
+  height: 100%;
+  -moz-box-shadow: 2px 2px 2px 0 black;
+  -webkit-box-shadow: 2px 2px 2px 0 black;
+  box-shadow: 2px 2px 2px 0 black; }
+  .main .sidebar {
+    vertical-align: top;
+    display: inline-block;
+    width: 20%;
+    height: 100%; }
+    .main .sidebar .calendar-container {
+      background-color: #628DD3;
+      margin: 0 auto 0 auto;
+      border: 1px solid #4C4C4C;
+      height: 35%; }
+      .main .sidebar .calendar-container #datepicker {
+        height: 90%; }
+        .main .sidebar .calendar-container #datepicker .ui-datepicker {
+          height: 100%; }
+          .main .sidebar .calendar-container #datepicker .ui-datepicker table {
+            height: 100%; }
+      .main .sidebar .calendar-container .selected-date {
+        color: #fff;
+        width: 100%;
+        margin: 0 0 10px 0;
+        text-align: center; }
+    .main .sidebar .client-list {
+      background-color: #EBEBEB;
+      border-top: 1px solid #C7B4B4;
+      border-left: 1px solid #C7B4B4;
+      border-right: 1px solid #C7B4B4;
+      height: 65%; }
+      .main .sidebar .client-list .cl-header {
+        -moz-box-shadow: 0 1px 2px black;
+        -webkit-box-shadow: 0 1px 2px black;
+        box-shadow: 0 1px 2px black;
+        padding: 7px 10px 7px 10px;
+        font-size: 1.2em; }
+        .main .sidebar .client-list .cl-header div {
+          display: inline-block; }
+        .main .sidebar .client-list .cl-header .search {
+          float: right; }
+          .main .sidebar .client-list .cl-header .search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            padding: 0 0 0 5px; }
+          .main .sidebar .client-list .cl-header .search input:focus {
+            border-bottom: 1px solid black; }
+      .main .sidebar .client-list ul {
+        padding: 0;
+        list-style: none; }
+        .main .sidebar .client-list ul .client-card {
+          padding: 0 0 0 10px;
+          border-bottom: 1px solid #3F3C3C; }
+          .main .sidebar .client-list ul .client-card .name {
+            display: inline;
+            font-size: 1.5em; }
+          .main .sidebar .client-list ul .client-card .info div {
+            display: inline-block; }
+          .main .sidebar .client-list ul .client-card .info .account {
+            float: right;
+            margin-right: 20px; }
   .main .view {
-    height: inherit; }
-    .main .view .navigation {
-      height: 100%;
-      padding: 2% 0 0 0; }
-      .main .view .navigation .calendar-container {
-        width: 30%;
-        background-color: #628DD3;
-        margin: 0 auto 0 auto;
-        border: 1px solid #4C4C4C;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
-        -ms-border-radius: 5px;
-        -o-border-radius: 5px;
-        border-radius: 5px;
-        -moz-box-shadow: 2px 2px 2px 0 black;
-        -webkit-box-shadow: 2px 2px 2px 0 black;
-        box-shadow: 2px 2px 2px 0 black; }
+    display: inline-block;
+    width: 80%;
+    height: 100%; }
     .main .view .registration-list {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      min-width: 1200px; }
+      height: 100%; }
       .main .view .registration-list .table {
         height: 100%;
-        width: 80%;
         margin: 0 auto 0 auto;
         background-color: #EBEBEB;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        border-top: 2px solid #C7B4B4;
-        border-left: 2px solid #C7B4B4;
-        border-right: 2px solid #C7B4B4; }
+        border-top: 2px solid #7B7B7B;
+        border-left: 2px solid #7B7B7B;
+        border-right: 2px solid #7B7B7B; }
         .main .view .registration-list .table .num {
           width: 3%; }
         .main .view .registration-list .table .client {
@@ -74,49 +138,47 @@ html {
           margin: 0;
           font-size: 1.1em; }
           .main .view .registration-list .table table .table-controls {
-            border-top-left-radius: 2px;
-            border-top-right-radius: 2px;
             height: 40px;
-            /* Chrome 10+,Safari */
             background: -webkit-linear-gradient(top, #cccccc 1%, #e6e6e6 48%, #cccccc 99%);
-            /* Firefox 4+ */
             background: -moz-linear-gradient(top, #cccccc 1%, #e6e6e6 48%, #cccccc 99%);
-            /* Opera */
             background: -o-linear-gradient(top, #cccccc 1%, #e6e6e6 48%, #cccccc 99%);
-            /* IE 10+ */
             background: -ms-linear-gradient(top, #cccccc 1%, #e6e6e6 48%, #cccccc 99%);
-            /* W3C */
             background: -linear-gradient(top, #cccccc 1%, #e6e6e6 48%, #cccccc 99%); }
-          .main .view .registration-list .table table tbody tr td .inner-table {
-            height: 520px;
-            padding: 0 0 120px 0;
-            overflow: auto; }
-            .main .view .registration-list .table table tbody tr td .inner-table table .entry {
-              border-bottom: 1px solid #C2C2C2; }
-              .main .view .registration-list .table table tbody tr td .inner-table table .entry .entry-controls {
-                float: right; }
-                .main .view .registration-list .table table tbody tr td .inner-table table .entry .entry-controls i {
-                  font-size: 21px;
-                  opacity: 0;
-                  -webkit-transition: opacity 300ms ease;
-                  -moz-transition: opacity 300ms ease;
-                  -ms-transition: opacity 300ms ease;
-                  -o-transition: opacity 300ms ease;
-                  transition: opacity 300ms ease;
-                  cursor: pointer;
-                  margin-right: 10px; }
-            .main .view .registration-list .table table tbody tr td .inner-table table .entry:hover {
-              background-color: #B1B1B1;
-              -webkit-transition: background-color 300ms ease;
-              -moz-transition: background-color 300ms ease;
-              -ms-transition: background-color 300ms ease;
-              -o-transition: background-color 300ms ease;
-              transition: background-color 300ms ease;
-              color: #ffffff; }
-              .main .view .registration-list .table table tbody tr td .inner-table table .entry:hover .entry-controls i {
-                opacity: 1;
+        .main .view .registration-list .table .inner-table {
+          height: 93%;
+          overflow-y: auto; }
+          .main .view .registration-list .table .inner-table table .entry {
+            border-bottom: 1px solid #C2C2C2; }
+            .main .view .registration-list .table .inner-table table .entry .entry-controls {
+              float: right; }
+              .main .view .registration-list .table .inner-table table .entry .entry-controls i {
+                font-size: 21px;
+                opacity: 0;
                 -webkit-transition: opacity 300ms ease;
                 -moz-transition: opacity 300ms ease;
                 -ms-transition: opacity 300ms ease;
                 -o-transition: opacity 300ms ease;
-                transition: opacity 300ms ease; }
+                transition: opacity 300ms ease;
+                cursor: pointer;
+                margin-right: 10px; }
+          .main .view .registration-list .table .inner-table table .entry:hover {
+            background-color: #B1B1B1;
+            -webkit-transition: background-color 300ms ease;
+            -moz-transition: background-color 300ms ease;
+            -ms-transition: background-color 300ms ease;
+            -o-transition: background-color 300ms ease;
+            transition: background-color 300ms ease;
+            color: #ffffff; }
+            .main .view .registration-list .table .inner-table table .entry:hover .entry-controls i {
+              opacity: 1;
+              -webkit-transition: opacity 300ms ease;
+              -moz-transition: opacity 300ms ease;
+              -ms-transition: opacity 300ms ease;
+              -o-transition: opacity 300ms ease;
+              transition: opacity 300ms ease; }
+
+@media only screen and (max-width: 1366px) {
+  .main .sidebar {
+    width: 30%; }
+  .main .view {
+    width: 70%; } }

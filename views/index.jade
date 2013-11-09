@@ -1,5 +1,49 @@
 extends layout
 
 block content
+  .navigation
+    ul
+      li
+        a(href="#")
+          i.ion-ios7-people
+          span Список клиентов
+      li
+        a(href="#")
+          i.ion-ios7-personadd
+          span Добавить клиента
+      li
+        a(href="#")
+          i.ion-ios7-compose
+          span Добавить запись
+      li
+        a(href="#")
+          i.ion-log-in
+          span Вход администратора
   .main
     .view(ng-view)
+    .sidebar
+      .calendar-container
+        calendar
+      .client-list
+        div.cl-header
+          div.cl-header-title Список клиентов:
+          div.search
+            input(type="text" placeholder="найти") 
+            i.ion-ios7-search
+        ul
+          li.client-card
+            div.name Ким Рем
+            div.info
+              div.master Мастер: Ким Диана 
+              div.account Накопительный счет: 1400 сом 
+          li.client-card
+            div.name Ким Рем
+            div.info
+              div.master Мастер: Ким Диана 
+              div.account Накопительный счет: 1400 сом 
+          li.client-card
+            div.name Ким Рем
+            div.info
+              div.master Мастер: Ким Диана 
+              div.account Накопительный счет: 1400 сом 
+              
