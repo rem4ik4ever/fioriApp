@@ -5,16 +5,66 @@
 
   app.config([
     '$routeProvider', function(routeProvider) {
-      return routeProvider.when('/', {
-        controller: 'mainCtrl',
-        templateUrl: 'views/main.html'
+      routeProvider.when('/', {
+        controller: 'notesCtrl',
+        templateUrl: 'views/notes.html'
+      });
+      return routeProvider.when('/addclient', {
+        controller: 'addUserCtrl',
+        templateUrl: 'views/newclient.html'
       });
     }
   ]);
 
-  app.controller('mainCtrl', [
+  app.controller('addUserCtrl', [
     '$scope', function(scope) {
-      return console.log("should work fine");
+      var animation;
+      console.log("add user ctrl");
+      animation = false;
+      scope.masters = ["Ким Диана", "Дмитрий Ногиев"];
+      scope.client = {
+        savings: 0,
+        discount: 0,
+        phone: [
+          {
+            type: "мобильный",
+            number: ""
+          }, {
+            type: "домашний",
+            number: ""
+          }
+        ]
+      };
+      scope.saveClient = function() {
+        console.log("Saving user:");
+        scope.client.reg_date = new Date();
+        return console.log(scope.client);
+      };
+      scope.setPhone = function(index) {
+        if (index === 0) {
+          return scope.client.phone[index].number = scope.mobilephone;
+        } else {
+          return scope.client.phone[index].number = scope.homephone;
+        }
+      };
+      scope.setBirthday = function() {
+        return scope.client.birthday = new Date(scope.birthday);
+      };
+      return scope.setMaster = function() {
+        return scope.client.master = scope.clientmaster;
+      };
+    }
+  ]);
+
+  app.controller('notesCtrl', [
+    '$scope', function(scope) {
+      return console.log("notes ctrl");
+    }
+  ]);
+
+  app.controller('addNoteCtrl', [
+    '$scope', function(scope) {
+      return console.log("add note ctrl");
     }
   ]);
 

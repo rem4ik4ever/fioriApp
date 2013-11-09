@@ -7,7 +7,7 @@ html {
   height: 100%; }
   html body {
     color: black;
-    background-image: url(../images/background2.jpg);
+    background-color: #EBEBEB;
     height: 100%;
     padding: 0;
     margin: 0;
@@ -20,7 +20,10 @@ html {
   width: 100%;
   background-color: #EBEBEB;
   display: block;
-  padding: 10px 0 10px 0; }
+  padding: 10px 0 10px 0;
+  -moz-box-shadow: 0 1px 1px black;
+  -webkit-box-shadow: 0 1px 1px black;
+  box-shadow: 0 1px 1px black; }
   .navigation ul {
     margin: 0;
     list-style: none;
@@ -48,7 +51,10 @@ html {
     vertical-align: top;
     display: inline-block;
     width: 20%;
-    height: 100%; }
+    height: 100%;
+    -moz-box-shadow: -1px 0 1px black;
+    -webkit-box-shadow: -1px 0 1px black;
+    box-shadow: -1px 0 1px black; }
     .main .sidebar .calendar-container {
       background-color: #628DD3;
       margin: 0 auto 0 auto;
@@ -110,11 +116,7 @@ html {
       height: 100%; }
       .main .view .registration-list .table {
         height: 100%;
-        margin: 0 auto 0 auto;
-        background-color: #EBEBEB;
-        border-top: 2px solid #7B7B7B;
-        border-left: 2px solid #7B7B7B;
-        border-right: 2px solid #7B7B7B; }
+        margin: 1px auto 0 auto; }
         .main .view .registration-list .table .num {
           width: 3%; }
         .main .view .registration-list .table .client {
@@ -176,6 +178,73 @@ html {
               -ms-transition: opacity 300ms ease;
               -o-transition: opacity 300ms ease;
               transition: opacity 300ms ease; }
+            .main .view .registration-list .table .inner-table table .entry:hover .entry-controls i:hover {
+              color: #77A8DE; }
+    .main .view .add-client-form {
+      padding: 10px 10px 10px 10px;
+      height: 100%;
+      width: 100%;
+      overflow: auto; }
+      .main .view .add-client-form .client-card {
+        vertical-align: top;
+        display: inline-block;
+        width: 50%;
+        min-height: 70%;
+        background-color: #fff;
+        -moz-box-shadow: 0 0 10px black;
+        -webkit-box-shadow: 0 0 10px black;
+        box-shadow: 0 0 10px black;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        -ms-border-radius: 12px;
+        -o-border-radius: 12px;
+        border-radius: 12px;
+        padding: 20px 10px 10px 20px; }
+        .main .view .add-client-form .client-card .fio {
+          font-size: 1.4em;
+          font-weight: bold; }
+        .main .view .add-client-form .client-card .birthday {
+          font-size: 0.8em;
+          margin: 0 0 10px 0; }
+        .main .view .add-client-form .client-card .email {
+          color: #427ADD; }
+        .main .view .add-client-form .client-card ul {
+          list-style: none;
+          padding: 0 0 0 5px; }
+        .main .view .add-client-form .client-card fieldset {
+          padding-top: 5px; }
+          .main .view .add-client-form .client-card fieldset legend {
+            margin: 5px 0 5px 0;
+            color: #664E00; }
+      .main .view .add-client-form .input-form {
+        margin-left: 5%;
+        display: inline-block;
+        width: 40%;
+        min-height: 80%;
+        background-color: #fff;
+        text-align: left;
+        padding: 20px 10px 0 10px;
+        font-size: 1.1em; }
+        .main .view .add-client-form .input-form .info {
+          font-size: 0.8em;
+          text-align: right;
+          margin: 0 0 10px 0;
+          color: #D27373; }
+        .main .view .add-client-form .input-form .input-field i {
+          cursor: pointer; }
+        .main .view .add-client-form .input-form .input-field i:hover {
+          color: #77A8DE; }
+        .main .view .add-client-form .input-form table {
+          width: 100%; }
+          .main .view .add-client-form .input-form table tr td {
+            padding: 0 0 10px 0; }
+            .main .view .add-client-form .input-form table tr td input {
+              width: 100%;
+              border: none;
+              border-bottom: 1px solid #000000;
+              outline: none;
+              background: transparent;
+              padding: 0 0 0 5px; }
 
 @media only screen and (max-width: 1366px) {
   .main .sidebar {
