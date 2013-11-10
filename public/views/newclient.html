@@ -68,15 +68,16 @@
         </tr>
       </table>
       <div>Постоянный мастер: <div class="input-field"><select ng-model="clientmaster" ng-change="setMaster()">
-        <option ng-repeat="master in masters">{{master}}</option>
-      </select>
+        <option value=""></option>
+        <option ng-repeat="master in masters">{{master}} </option>
+      </select><i title="Добавить мастера" ng-click="addMaster(clientmaster)" class="ion-ios7-plus"></i>
+      <ul>
+        <li ng-repeat="master in client.masters">{{master}} <i title="Убрать мастера" ng-click="removeMaster(master)" class="ion-minus-circled"></i></li>
+      </ul>
       </div>
-        <ul>
-          <li ng-repeat="master in client.masters">{{master}} <i title="Добавить" class="ion-ios7-minus-outline"></i></li>
-        </ul>
       </div>
       <button type="submit">Добавить клиента</button>
-      <button >Очистить поля</button>
     </form>
+    <button ng-click="cleanFields()">Очистить поля</button>
   </div>
 </div>

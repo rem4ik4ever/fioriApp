@@ -67,7 +67,18 @@ html{
     }
   }
 }
-
+button{
+  float: right;
+  border: none;
+  background-color: #1D49C6;
+  color: #fff;
+  padding: 7px 10px 7px 10px;
+  margin: 10px 0 0 5px !important;
+  // outline-color: #CECECE;
+}
+button:active{
+  @include box-shadow(inset 0 0 10px #000000);
+}
 .main{
   // width: 100%;
   height: 100%;
@@ -276,11 +287,12 @@ html{
         margin-left: 5%;
         display: inline-block;
         width: 40%;
-        min-height: 80%;
-        background-color: #fff;
+        min-height: 70%;
+        // background-color: #fff;
         text-align: left;
         padding: 20px 10px 0 10px;
         font-size: 1.1em;
+        
         .info{
           font-size: 0.8em;
           text-align: right;
@@ -293,6 +305,23 @@ html{
           }
           i:hover{
             color: #77A8DE;
+          }
+        }
+        ul{
+          list-style: none;
+          padding: 0 0 0 5px;
+          margin: 0 auto 0 auto;
+          li{
+            margin: 5px 0 0 0 ;
+            padding: 5px 5px 5px 10px;
+            i{
+              float: right;
+              margin: 3px 0 0 0;
+            }
+          }
+          li:hover{
+            background-color: #6B6B6B;
+            color: white;
           }
         }
         table{

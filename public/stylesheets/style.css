@@ -42,6 +42,19 @@ html {
       .navigation ul li span {
         display: block; }
 
+button {
+  float: right;
+  border: none;
+  background-color: #1D49C6;
+  color: #fff;
+  padding: 7px 10px 7px 10px;
+  margin: 10px 0 0 5px !important; }
+
+button:active {
+  -moz-box-shadow: inset 0 0 10px black;
+  -webkit-box-shadow: inset 0 0 10px black;
+  box-shadow: inset 0 0 10px black; }
+
 .main {
   height: 100%;
   -moz-box-shadow: 2px 2px 2px 0 black;
@@ -220,8 +233,7 @@ html {
         margin-left: 5%;
         display: inline-block;
         width: 40%;
-        min-height: 80%;
-        background-color: #fff;
+        min-height: 70%;
         text-align: left;
         padding: 20px 10px 0 10px;
         font-size: 1.1em; }
@@ -234,6 +246,19 @@ html {
           cursor: pointer; }
         .main .view .add-client-form .input-form .input-field i:hover {
           color: #77A8DE; }
+        .main .view .add-client-form .input-form ul {
+          list-style: none;
+          padding: 0 0 0 5px;
+          margin: 0 auto 0 auto; }
+          .main .view .add-client-form .input-form ul li {
+            margin: 5px 0 0 0;
+            padding: 5px 5px 5px 10px; }
+            .main .view .add-client-form .input-form ul li i {
+              float: right;
+              margin: 3px 0 0 0; }
+          .main .view .add-client-form .input-form ul li:hover {
+            background-color: #6B6B6B;
+            color: white; }
         .main .view .add-client-form .input-form table {
           width: 100%; }
           .main .view .add-client-form .input-form table tr td {
