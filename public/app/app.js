@@ -16,8 +16,20 @@
     }
   ]);
 
+  app.factory('clientsService', [
+    '$http', function(http) {
+      return {
+        create: function(client) {
+          var result;
+          console.log("create called");
+          return result = http.post('/api/clients/create', client);
+        }
+      };
+    }
+  ]);
+
   app.controller('addUserCtrl', [
-    '$scope', function(scope) {
+    '$scope', 'clientsService', function(scope, clientsService) {
       var animation, client;
       console.log("add user ctrl");
       animation = false;
@@ -28,10 +40,10 @@
           discount: 0,
           phone: [
             {
-              type: "мобильный",
+              phonetype: "мобильный",
               number: ""
             }, {
-              type: "домашний",
+              phonetype: "домашний",
               number: ""
             }
           ],
@@ -40,9 +52,17 @@
       };
       scope.client = new client;
       scope.saveClient = function() {
+        var response;
         console.log("Saving user:");
         scope.client.reg_date = new Date();
-        return console.log(scope.client);
+        console.log(scope.client);
+        response = clientsService.create(scope.client);
+        response.success(function(data) {
+          return console.log(data);
+        });
+        return response.error(function() {
+          return console.log("Error");
+        });
       };
       scope.setPhone = function(index) {
         if (index === 0) {
@@ -53,9 +73,6 @@
       };
       scope.setBirthday = function() {
         return scope.client.birthday = new Date(scope.birthday);
-      };
-      scope.setMaster = function() {
-        return scope.client.master = scope.clientmaster;
       };
       scope.cleanFields = function() {
         scope.client = new client;

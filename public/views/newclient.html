@@ -6,8 +6,8 @@
     <legend>Контактные данные:</legend>
       <div>Телефон:</div>
       <ul>
-        <li>{{client.phone[0].type}} : {{client.phone[0].number}}</li>
-        <li>{{client.phone[1].type}} : {{client.phone[1].number}}</li>
+        <li>{{client.phone[0].phonetype}} : {{client.phone[0].number}}</li>
+        <li>{{client.phone[1].phonetype}} : {{client.phone[1].number}}</li>
       </ul>
       <div>Почта: <span class="email">{{client.email}}</span></div>
     </fieldset>
@@ -52,11 +52,11 @@
         </tr>
         <tr>
           <td>Мобильный номер *:</td>
-          <td><input type="tel" pattern="^\(?\d{3}\)?\d{3}\d{3}.*?$" placeholder="(555)555555" ng-model="mobilephone" ng-change="setPhone(0)" required></td>
+          <td><input type="tel" pattern="^\d{3}\d{3}\d{3}.*?$" placeholder="555312312" ng-model="mobilephone" ng-change="setPhone(0)" required></td>
         </tr>
         <tr>
           <td>Домашний номер:</td>
-          <td><input type="tel" pattern="^\(?\d{3}\)?\d{3}\d{3}.*?$" placeholder="(555)555555" ng-model="homephone" ng-change="setPhone(1)"></td>
+          <td><input type="tel" pattern="^\d{3}\d{3}\d{3}.*?$" placeholder="555312312" ng-model="homephone" ng-change="setPhone(1)"></td>
         </tr>
         <tr>
           <td>Почта:</td>
@@ -67,7 +67,7 @@
           <td><input type="number" ng-model="client.savings"></td>
         </tr>
       </table>
-      <div>Постоянный мастер: <div class="input-field"><select ng-model="clientmaster" ng-change="setMaster()">
+      <div>Постоянный мастер: <div class="input-field"><select ng-model="clientmaster">
         <option value=""></option>
         <option ng-repeat="master in masters">{{master}} </option>
       </select><i title="Добавить мастера" ng-click="addMaster(clientmaster)" class="ion-ios7-plus"></i>

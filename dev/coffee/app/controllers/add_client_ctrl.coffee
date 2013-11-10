@@ -1,4 +1,4 @@
-app.controller 'addUserCtrl', ['$scope', (scope)->
+app.controller 'addUserCtrl', ['$scope', 'clientsService', (scope, clientsService)->
   console.log "add user ctrl"
   animation = false;
   scope.masters = ["Ким Диана", "Дмитрий Ногиев"]
@@ -9,11 +9,11 @@ app.controller 'addUserCtrl', ['$scope', (scope)->
     discount: 0
     phone: [
       {
-        type: "мобильный"
+        phonetype: "мобильный"
         number: ""
       }
       {
-        type: "домашний"
+        phonetype: "домашний"
         number: ""
       }
     ]
@@ -26,6 +26,12 @@ app.controller 'addUserCtrl', ['$scope', (scope)->
     console.log "Saving user:"
     scope.client.reg_date = new Date()
     console.log scope.client
+    response = clientsService.create scope.client
+    response.success (data)->
+      console.log data
+    response.error ()->
+      console.log "Error"
+
 
   scope.setPhone = (index)->
     if index is 0
@@ -35,9 +41,6 @@ app.controller 'addUserCtrl', ['$scope', (scope)->
 
   scope.setBirthday = ()->
     scope.client.birthday = new Date scope.birthday
-
-  scope.setMaster = ()->
-    scope.client.master = scope.clientmaster
 
   scope.cleanFields = ()->
     scope.client = new client

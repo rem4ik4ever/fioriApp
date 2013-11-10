@@ -4,7 +4,7 @@ module.exports = function(grunt){
 
 		concat: {
 			coffee: {
-				src: ['dev/coffee/app/module.coffee', 'dev/coffee/app/routes.coffee', 'dev/coffee/app/**/*.coffee', 'dev/coffee/app/**/*.coffee'],
+				src: ['dev/coffee/app/module.coffee', 'dev/coffee/app/routes.coffee', 'dev/coffee/app/factories/**/*.coffee','dev/coffee/app/**/*.coffee', 'dev/coffee/app/**/*.coffee'],
 				dest: 'dev/coffee/app.coffee',
 			}
 		},
