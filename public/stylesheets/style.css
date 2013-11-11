@@ -42,6 +42,9 @@ html {
       .navigation ul li span {
         display: block; }
 
+.red {
+  background-color: #CA1818; }
+
 button {
   float: right;
   border: none;
@@ -57,6 +60,7 @@ button:active {
 
 .main {
   height: 100%;
+  border-top: 1px solid #4C4C4C;
   -moz-box-shadow: 2px 2px 2px 0 black;
   -webkit-box-shadow: 2px 2px 2px 0 black;
   box-shadow: 2px 2px 2px 0 black; }
@@ -68,10 +72,14 @@ button:active {
     -moz-box-shadow: -1px 0 1px black;
     -webkit-box-shadow: -1px 0 1px black;
     box-shadow: -1px 0 1px black; }
+    .main .sidebar .clock {
+      color: #FFFFFF;
+      text-align: center;
+      font-size: 1.1em;
+      background-color: #628DD3; }
     .main .sidebar .calendar-container {
       background-color: #628DD3;
       margin: 0 auto 0 auto;
-      border: 1px solid #4C4C4C;
       height: 35%; }
       .main .sidebar .calendar-container #datepicker {
         height: 90%; }
@@ -98,33 +106,47 @@ button:active {
         font-size: 1.2em; }
         .main .sidebar .client-list .cl-header div {
           display: inline-block; }
-        .main .sidebar .client-list .cl-header .search {
-          float: right; }
-          .main .sidebar .client-list .cl-header .search input {
-            border: none;
-            background: transparent;
-            outline: none;
-            padding: 0 0 0 5px; }
-          .main .sidebar .client-list .cl-header .search input:focus {
-            border-bottom: 1px solid black; }
-      .main .sidebar .client-list ul {
-        padding: 0;
-        list-style: none; }
-        .main .sidebar .client-list ul .client-card {
-          padding: 0 0 0 10px;
-          border-bottom: 1px solid #3F3C3C; }
-          .main .sidebar .client-list ul .client-card .name {
-            display: inline;
-            font-size: 1.5em; }
-          .main .sidebar .client-list ul .client-card .info div {
-            display: inline-block; }
-          .main .sidebar .client-list ul .client-card .info .account {
-            float: right;
-            margin-right: 20px; }
+      .main .sidebar .client-list .list {
+        overflow: auto;
+        height: inherit; }
+        .main .sidebar .client-list .list ul {
+          padding: 0;
+          list-style: none; }
+          .main .sidebar .client-list .list ul .client-card {
+            padding: 0 0 0 10px;
+            border-bottom: 1px solid #3F3C3C; }
+            .main .sidebar .client-list .list ul .client-card .name {
+              display: inline;
+              font-size: 1.5em; }
+            .main .sidebar .client-list .list ul .client-card .info div {
+              display: inline-block; }
+            .main .sidebar .client-list .list ul .client-card .info .account {
+              float: right;
+              margin-right: 20px; }
   .main .view {
     display: inline-block;
     width: 80%;
     height: 100%; }
+    .main .view .search {
+      text-align: center;
+      padding: 10px 0 10px 0;
+      font-size: 1.4em; }
+      .main .view .search input {
+        padding: 3px 5px 3px 5px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        -ms-border-radius: 5px;
+        -o-border-radius: 5px;
+        border-radius: 5px;
+        -moz-box-shadow: 0 0 2px black;
+        -webkit-box-shadow: 0 0 2px black;
+        box-shadow: 0 0 2px black;
+        border: none; }
+      .main .view .search input:focus {
+        outline: none;
+        -moz-box-shadow: inset 0 0 5px 1px #2a759e;
+        -webkit-box-shadow: inset 0 0 5px 1px #2a759e;
+        box-shadow: inset 0 0 5px 1px #2a759e; }
     .main .view .registration-list {
       height: 100%; }
       .main .view .registration-list .table {
@@ -133,13 +155,24 @@ button:active {
         .main .view .registration-list .table .num {
           width: 3%; }
         .main .view .registration-list .table .client {
-          width: 30%; }
+          width: 25%; }
         .main .view .registration-list .table .type {
           width: 20%; }
         .main .view .registration-list .table .master {
           width: 30%; }
         .main .view .registration-list .table .time {
           width: 17%; }
+        .main .view .registration-list .table .name {
+          width: 15%; }
+        .main .view .registration-list .table .phone {
+          width: 25%;
+          text-align: center; }
+        .main .view .registration-list .table .discount {
+          width: 10%;
+          text-align: center; }
+        .main .view .registration-list .table .savings {
+          width: 17%;
+          text-align: center; }
         .main .view .registration-list .table .list-controls {
           font-size: 18px;
           float: right; }
@@ -159,9 +192,15 @@ button:active {
             background: -o-linear-gradient(top, #cccccc 1%, #e6e6e6 48%, #cccccc 99%);
             background: -ms-linear-gradient(top, #cccccc 1%, #e6e6e6 48%, #cccccc 99%);
             background: -linear-gradient(top, #cccccc 1%, #e6e6e6 48%, #cccccc 99%); }
+            .main .view .registration-list .table table .table-controls th {
+              border-left: 1px solid #AFAFAF; }
+            .main .view .registration-list .table table .table-controls th:first-child {
+              border-left: none; }
         .main .view .registration-list .table .inner-table {
-          height: 93%;
+          height: 70%;
           overflow-y: auto; }
+          .main .view .registration-list .table .inner-table table .link {
+            cursor: pointer; }
           .main .view .registration-list .table .inner-table table .entry {
             border-bottom: 1px solid #C2C2C2; }
             .main .view .registration-list .table .inner-table table .entry .entry-controls {
@@ -195,14 +234,14 @@ button:active {
               color: #77A8DE; }
     .main .view .add-client-form {
       padding: 10px 10px 10px 10px;
-      height: 100%;
+      height: 85%;
       width: 100%;
       overflow: auto; }
       .main .view .add-client-form .client-card {
         vertical-align: top;
         display: inline-block;
         width: 50%;
-        min-height: 70%;
+        min-height: 80%;
         background-color: #fff;
         -moz-box-shadow: 0 0 10px black;
         -webkit-box-shadow: 0 0 10px black;
@@ -216,6 +255,12 @@ button:active {
         .main .view .add-client-form .client-card .fio {
           font-size: 1.4em;
           font-weight: bold; }
+        .main .view .add-client-form .client-card .added {
+          color: green;
+          float: right;
+          font-size: 3em; }
+        .main .view .add-client-form .client-card .red-icon {
+          color: red; }
         .main .view .add-client-form .client-card .birthday {
           font-size: 0.8em;
           margin: 0 0 10px 0; }
@@ -243,7 +288,8 @@ button:active {
           margin: 0 0 10px 0;
           color: #D27373; }
         .main .view .add-client-form .input-form .input-field i {
-          cursor: pointer; }
+          cursor: pointer;
+          margin: 0 0 0 10px; }
         .main .view .add-client-form .input-form .input-field i:hover {
           color: #77A8DE; }
         .main .view .add-client-form .input-form ul {
@@ -270,6 +316,23 @@ button:active {
               outline: none;
               background: transparent;
               padding: 0 0 0 5px; }
+      .main .view .add-client-form .service {
+        margin: 10px 0 0 0; }
+        .main .view .add-client-form .service table {
+          margin: 10px 0 0 0; }
+        .main .view .add-client-form .service input {
+          padding: 2px 3px 2px 3px; }
+        .main .view .add-client-form .service input:focus {
+          outline: none;
+          border-bottom: 1px solid #4AAAC0; }
+        .main .view .add-client-form .service .addserivce {
+          float: right;
+          cursor: pointer;
+          color: #5D94C1; }
+        .main .view .add-client-form .service .addserivce:hover {
+          color: #3370A2; }
+        .main .view .add-client-form .service li {
+          cursor: pointer; }
 
 @media only screen and (max-width: 1366px) {
   .main .sidebar {

@@ -3,6 +3,26 @@ app.config ['$routeProvider', (routeProvider)->
     controller: 'notesCtrl'
     templateUrl: 'views/notes.html'
   routeProvider.when '/addclient', {} = 
-    controller: 'addUserCtrl'
-    templateUrl: 'views/newclient.html'
+    controller: 'ClientCtrl'
+    templateUrl: 'views/client.html'
+    resolve: {
+      param: ()->
+        {type:'add', client: null}
+    }
+  routeProvider.when '/clients', {} =
+    controller: 'clientsCtrl'
+    templateUrl: 'views/clientslist.html'
+    resolve: {
+      clients: (clientsService)->
+        request = clientsService.all()
+        request.success (data)->
+          data
+    }
+  routeProvider.when '/clients/edit/:id', {} =
+    controller: 'ClientCtrl'
+    templateUrl: 'views/client.html'
+    resolve: {
+      param: (clientsService)->
+        {type: 'edit', client: clientsService.getEdit()}
+    }
 ]

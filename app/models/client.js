@@ -15,7 +15,23 @@ var ClientSchema = new Schema({
   services: [{
     service_type: String,
     material : String
-  }]
+  }],
+  reg_date: Date
 });
+
+
+/**
+ * Statics
+ */
+
+
+ClientSchema.statics ={
+  load: function(id, cb){
+    this.findOne({
+      _id : id
+    }).exec(cb);
+  }
+}
+
 
 mongoose.model('Client', ClientSchema);

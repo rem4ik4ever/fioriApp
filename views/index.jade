@@ -8,7 +8,7 @@ block content
           i.ion-clipboard
           span Записи
       li
-        a(href="#")
+        a(href="#/clients")
           i.ion-ios7-people
           span Список клиентов
       li
@@ -21,33 +21,36 @@ block content
           span Добавить запись
       li
         a(href="#")
+          i.ion-person-stalker
+          span Список мастеров
+      li
+        a(href="#")
+          i.ion-ios7-contact-outline
+          span Добавить мастера
+      li
+        a(href="#")
           i.ion-log-in
           span Вход администратора
   .main
     .view(ng-view)
     .sidebar
+      div.clock
+        span Время: 
+        span(clock)
       .calendar-container
         calendar
       .client-list
         div.cl-header
-          div.cl-header-title Список клиентов:
-          div.search
-            input(type="text" placeholder="найти") 
-            i.ion-ios7-search
-        ul
-          li.client-card
-            div.name Ким Рем
-            div.info
-              div.master Мастер: Ким Диана 
-              div.account Накопительный счет: 1400 сом 
-          li.client-card
-            div.name Ким Рем
-            div.info
-              div.master Мастер: Ким Диана 
-              div.account Накопительный счет: 1400 сом 
-          li.client-card
-            div.name Ким Рем
-            div.info
-              div.master Мастер: Ким Диана 
-              div.account Накопительный счет: 1400 сом 
-              
+          div.cl-header-title Ближайшие дни рождения:
+        div.list
+          ul
+            li.client-card
+              div.name Ким Рем
+              div.info
+                div.master Мастер: Ким Диана 
+                div.account Накопительный счет: 1400 сом 
+            li.client-card
+              div.name Ким Рем
+              div.info
+                div.master Мастер: Ким Диана 
+                div.account Накопительный счет: 1400 сом 

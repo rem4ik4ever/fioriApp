@@ -1,6 +1,4 @@
-directives = {}
-
-directives.calendar = ()->
+app.directive 'calendar', ()->
   {
     restrict : "EA"
     template : '<div id="datepicker"></div>'
@@ -17,9 +15,5 @@ directives.calendar = ()->
           console.log date
           testdate = new Date(date)
           console.log testdate
-      })
+      }) 
   }
-
-
-
-app.directive directives

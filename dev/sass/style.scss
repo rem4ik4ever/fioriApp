@@ -67,6 +67,9 @@ html{
     }
   }
 }
+.red{
+  background-color: #CA1818;
+}
 button{
   float: right;
   border: none;
@@ -74,28 +77,34 @@ button{
   color: #fff;
   padding: 7px 10px 7px 10px;
   margin: 10px 0 0 5px !important;
-  // outline-color: #CECECE;
 }
 button:active{
   @include box-shadow(inset 0 0 10px #000000);
 }
 .main{
-  // width: 100%;
   height: 100%;
+  border-top: 1px solid #4C4C4C;
   @include box-shadow(2px 2px 2px 0 #000000);
   .sidebar{
     vertical-align: top;
     display: inline-block;
     width: 20%;
     height: 100%;
+    .clock{
+      color: #FFFFFF;
+      text-align: center;
+      font-size: 1.1em;
+      background-color: #628DD3;
+    }
     @include box-shadow(-1px 0 1px #000000);
     .calendar-container{
       background-color: #628DD3;    //<- blue
       // background-color: #E48148; //<- orange
       margin: 0 auto 0 auto;
-      border: 1px solid #4C4C4C;
+      // border: 1px solid #4C4C4C;
       height: 35%;
       // @include border-radius(5px);
+
       #datepicker{
         height: 90%;
         .ui-datepicker{
@@ -125,36 +134,28 @@ button:active{
         div{
           display: inline-block;
         }
-        .search{
-          float: right;
-          input{
-            border: none;
-            background: transparent;
-            outline: none;
-            padding: 0 0 0 5px;
-          }
-          input:focus{
-            border-bottom: 1px solid black;
-          }
-        }
       }
-      ul{
-        padding: 0;
-        list-style: none;
-        .client-card{
-          padding: 0 0 0 10px;
-          border-bottom: 1px solid #3F3C3C;
-          .name{
-            display: inline;
-            font-size: 1.5em;
-          }
-          .info{
-            div{
-              display: inline-block;
+      .list{
+        overflow: auto;
+        height: inherit;
+        ul{
+          padding: 0;
+          list-style: none;
+          .client-card{
+            padding: 0 0 0 10px;
+            border-bottom: 1px solid #3F3C3C;
+            .name{
+              display: inline;
+              font-size: 1.5em;
             }
-            .account{
-              float: right;
-              margin-right: 20px;
+            .info{
+              div{
+                display: inline-block;
+              }
+              .account{
+                float: right;
+                margin-right: 20px;
+              }
             }
           }
         }
@@ -165,6 +166,22 @@ button:active{
     display: inline-block;
     width: 80%;
     height: 100%;
+    .search{
+      text-align: center;
+      padding: 10px 0 10px 0;
+      font-size: 1.4em;
+      input{
+        padding: 3px 5px 3px 5px;
+        @include border-radius(5px);
+        @include box-shadow(0 0 2px #000000);
+        border: none;
+      }
+      input:focus{
+        // outline-color: #3497CD;
+        outline:none;
+        @include box-shadow(inset 0 0 5px 1px #2A759E);
+      }
+    }
     .registration-list{
       height: 100%;
       .table{
@@ -174,7 +191,7 @@ button:active{
           width: 3%;
         }
         .client{
-          width: 30%;
+          width: 25%;
         }
         .type{
           width: 20%;
@@ -184,6 +201,21 @@ button:active{
         }
         .time{
           width: 17%;
+        }
+        .name{
+          width: 15%;
+        }
+        .phone{
+          width: 25%;
+          text-align: center;
+        }
+        .discount{
+          width: 10%;
+          text-align: center;
+        }
+        .savings{
+          width: 17%;
+          text-align: center;
         }
         .list-controls{
           font-size: 18px;
@@ -207,13 +239,23 @@ button:active{
             background : -o-linear-gradient(top, rgb(204, 204, 204) 01%, rgb(230, 230, 230) 48%, rgb(204, 204, 204) 99%);
             background : -ms-linear-gradient(top, rgb(204, 204, 204) 01%, rgb(230, 230, 230) 48%, rgb(204, 204, 204) 99%); 
             background : -linear-gradient(top, rgb(204, 204, 204) 01%, rgb(230, 230, 230) 48%, rgb(204, 204, 204) 99%);
+            th{
+              border-left: 1px solid #AFAFAF;
+            }
+            th:first-child{
+              border-left: none;
+            }
           }
                
         }
          .inner-table{
-          height: 100% - 7%;
+          // height: 100% - 7%;
+          height: 70%;
           overflow-y: auto;
           table{
+            .link{
+              cursor: pointer;
+            }
             .entry{
               border-bottom: 1px solid #C2C2C2;
               .entry-controls{
@@ -247,7 +289,7 @@ button:active{
     }
     .add-client-form{
       padding: 10px 10px 10px 10px;
-      height: 100%;
+      height: 85%;
       width: 100%;
       overflow: auto;
 
@@ -255,7 +297,7 @@ button:active{
         vertical-align: top;
         display: inline-block;
         width: 50%;
-        min-height: 70%;
+        min-height: 80%;
         background-color: #fff;
         @include box-shadow(0 0 10px #000000);
         @include border-radius(12px);
@@ -263,6 +305,14 @@ button:active{
         .fio{
           font-size: 1.4em;
           font-weight: bold;
+        }
+        .added{
+          color: green;
+          float: right;
+          font-size: 3em;
+        }
+        .red-icon{
+          color: red;
         }
         .birthday{
           font-size: 0.8em;
@@ -302,6 +352,7 @@ button:active{
         .input-field{
           i{
             cursor:pointer;
+            margin: 0 0 0 10px;
           }
           i:hover{
             color: #77A8DE;
@@ -339,6 +390,33 @@ button:active{
               }
             }
           }
+        }
+      }
+      .service{
+        margin: 10px 0 0 0;
+        table{
+          margin: 10px 0 0 0 ;
+        }
+        input{
+          padding: 2px 3px 2px 3px;
+          // border: 1px solid #000000;
+          // @include border-radius(5px);
+          // @include box-shadow(0 0 2px #000000);
+        }
+        input:focus{
+          outline: none;
+          border-bottom: 1px solid #4AAAC0;
+        }
+        .addserivce{
+          float: right;
+          cursor: pointer;
+          color: #5D94C1;
+        }
+        .addserivce:hover{
+          color: #3370A2; 
+        }
+        li{
+          cursor: pointer;
         }
       }
     }

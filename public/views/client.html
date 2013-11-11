@@ -1,6 +1,9 @@
 <div class="add-client-form">
   <div class="client-card">
     <span class="fio">{{client.surname}} {{client.name}} {{client.patronymic}}</span>
+    <i class="added ion-checkmark" ng-hide="active"></i>
+    <i class="added ion-thumbsup" ng-show="updated"></i>
+    <i class="added red-icon ion-close-circled" ng-show="removed"></i>
     <div class="birthday">Дата рождения: {{birthday}} </div>
     <fieldset>
     <legend>Контактные данные:</legend>
@@ -22,15 +25,14 @@
         <li ng-repeat="master in client.masters">{{master}}</li>
       </ul>
     </fieldset>
-   <!--  <fieldset>
+    <fieldset>
       <legend>Дополнительные данные:</legend>
       <ul>
-        <li ng-repeat="service in client.services">{{service.type}} : {{service.material}}</li>
-        <li>Краска : Loreal</li>
+        <li ng-repeat="service in client.services">{{service.service_type}} : {{service.material}}</li>
       </ul>
-    </fieldset> -->
+    </fieldset>
   </div>
-  <div class="input-form">
+  <div class="input-form" ng-show="active" ng-hide="hideIt()">
     <div class="info">Поля помеченные * обязательны</div>
     <form ng-submit="saveClient()">
       <table>
@@ -48,7 +50,7 @@
         </tr>
         <tr>
           <td>Дата рождения *:</td>
-          <td><input type="date" ng-model="birthday" ng-change="setBirthday()" required></td>
+          <td><input type="date" ng-model="birthday" ng-change="setBirthday()" ng-value="birthday" required></td>
         </tr>
         <tr>
           <td>Мобильный номер *:</td>
@@ -76,8 +78,33 @@
       </ul>
       </div>
       </div>
-      <button type="submit">Добавить клиента</button>
+      <div class="service">Добавить постоянный материал:
+        <table>
+          <tr>
+            <td>Услуга:</td>
+            <td><input type="text" ng-model="service.service_type"></td>
+          </tr>
+          <tr>
+            <td>Материал:</td>
+            <td><input type="text" ng-model="service.material"></td>
+            
+          </tr>
+          <tr colspan="2">
+            <td></td>
+            <td><span class="addserivce" ng-click="addService()"><i class="ion-ios7-plus"></i> добавить</span></td>
+          </tr>
+        </table>
+        <ul>
+          <li ng-repeat="service in client.services track by $index">{{service.service_type}} : {{service.material}} <i class="ion-minus-circled" ng-click="removeService($index)"></i></li>
+        </ul>
+
+      </div>
+
+      <button ng-show="formType()" type="submit">Добавить клиента</button>
+      <button ng-hide="formType()" type="submit">Обновить данные</button>
     </form>
-    <button ng-click="cleanFields()">Очистить поля</button>
+    <button ng-show="formType()" ng-click="cleanFields()">Очистить поля</button>
+    <button ng-hide="formType()" class="red" ng-click="remove()">Удалить клиента</button>
   </div>
+  <button ng-hide="active" ng-click="restart()">Добавить нового клиента</button>
 </div>

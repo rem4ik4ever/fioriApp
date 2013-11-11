@@ -14,7 +14,8 @@
     "express": "3.4.0",
     "jade": "*",
     "grunt": "~0.4.1",
-    "mongoose": "~3.8.0"
+    "mongoose": "~3.8.0",
+    "underscore": "~1.5.2"
   },
   "devDependencies": {
     "grunt-contrib-coffee": "~0.7.0",
