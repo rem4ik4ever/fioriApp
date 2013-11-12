@@ -1,0 +1,100 @@
+<div class="add-client-form">
+  <div class="client-card">
+    <span class="fio">{{master.surname}} {{master.name}} {{master.patronymic}}</span>
+    <i class="added ion-checkmark" ng-hide="active"></i>
+    <i class="added ion-thumbsup" ng-show="updated"></i>
+    <i class="added red-icon ion-close-circled" ng-show="removed"></i>
+    <div class="birthday">Дата рождения: {{birthday}} </div>
+    <fieldset>
+      <legend>Контактные данные:</legend>
+      <div>Телефон:</div>
+      <ul>
+        <li>{{master.phone[0].phonetype}} : {{master.phone[0].number}}</li>
+        <li>{{master.phone[1].phonetype}} : {{master.phone[1].number}}</li>
+      </ul>
+      <div>Почта: <span class="email">{{master.email}}</span></div>
+      <div>Адрес: {{master.address}}</div>
+    </fieldset>
+    <fieldset>
+      <legend>Данные о мастере</legend>
+      <div>Специализация: </div>
+      <ul>
+        <li ng-repeat="spec in master.spec">{{spec}}</li>
+      </ul>
+    </fieldset>
+    <fieldset>
+      <legend>Условия найма: </legend>
+      <div>Дата найма: {{hiredate}}</div>
+      <div>Процентная ставка: {{master.wageRate}}%</div>
+      <div ng-show="master.firedate">Дата увольнения: {{firedate}}</div>
+    </fieldset>
+  </div>
+  <div class="input-form" ng-show="active" ng-hide="hideIt()">
+    <div class="info">Поля помеченные * обязательны</div>
+    <form ng-submit="saveMaster()">
+      <table>
+        <tr>
+          <td>Имя *:</td>
+          <td><input type="text" ng-model="master.name" required></td>
+        </tr>
+        <tr>
+          <td>Фамилия *:</td>
+          <td><input type="text" ng-model="master.surname" required></td>
+        </tr>
+        <tr>
+          <td>Отчество:</td>
+          <td><input type="text" ng-model="master.patronymic"></td>
+        </tr>
+        <tr>
+          <td>Дата рождения *:</td>
+          <td><input type="date" ng-model="birthday" ng-change="setBirthday()" ng-value="birthday" required></td>
+        </tr>
+        <tr>
+          <td>Мобильный номер *:</td>
+          <td><input type="tel" pattern="^\d{3}\d{3}\d{3}.*?$" placeholder="555312312" ng-model="mobilephone" ng-change="setPhone(0)" required></td>
+        </tr>
+        <tr>
+          <td>Домашний номер *:</td>
+          <td><input type="tel" pattern="^\d{3}\d{3}\d{3}.*?$" placeholder="555312312" ng-model="homephone" ng-change="setPhone(1)" required></td>
+        </tr>
+        <tr>
+          <td>Почта:</td>
+          <td><input type="email" ng-model="master.email"></td>
+        </tr>
+        <tr>
+          <td>Домашний адрес *:</td>
+          <td><input type="text" ng-model="master.address" required></td>
+        </tr>
+        <tr>
+          <td>Дата найма *:</td>
+          <td><input type="date" ng-model="hiredate" ng-value="hiredate" ng-change="setHiredate()" required></td>
+        </tr>
+        <tr>
+          <td>Процентная ставка *:</td>
+          <td><input type="number" ng-model="master.wageRate" min="30" max="70" required></td>
+        </tr>
+        <tr>
+          <td>Дата увольнения:</td>
+          <td><input type="date" ng-model="firedate" ng-value="firedate" ng-change="setFiredate()"></td>
+        </tr>
+      </table>
+      <div>Специализация: <div class="input-field"><input type="text" ng-model="spec"><i title="Добавить специализацию" ng-click="addSpec(spec)" class="ion-ios7-plus"></i>
+      <ul>
+        <li ng-repeat="spec in master.spec">
+          <table>
+            <tr class="info-line">
+              <td>{{spec}}</td>
+              <td><i title="Убрать специализацию" ng-click="removeSpec(spec)" class="ion-minus-circled"></i></td>
+            </tr>
+          </table>
+        </li>
+      </ul>
+      </div>
+      </div>
+      <button ng-show="formType()" type="submit">Добавить мастера</button>
+      <button ng-hide="formType()" type="submit">Обновить данные</button>
+    </form>
+    <button ng-show="formType()" ng-click="cleanFields()">Очистить поля</button>
+    <button ng-hide="formType()" class="red" ng-click="remove()">Удалить мастера</button>
+  </div>
+</div>

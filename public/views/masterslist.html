@@ -1,0 +1,32 @@
+<div class="search">Быстрый поиск: <input type="text" ng-model="q"></div>
+<div class="registration-list">
+  <div class="table">
+    <table>
+      <thead class="table-controls">
+        <tr>
+          <th class="num">#</th>
+          <th class="name">ФИО <i class="ion-arrow-up-b"></i></th>
+          <th class="master">Специализация</th>
+          <th class="phone"><select ng-model="cur_type" ng-options="type for type in types" ng-change="changePhone()">
+          </select></th>
+          <th class="discount">Ставка</th>
+          <th class="savings"></th>
+        </tr>
+      </thead>
+    </table>
+      <div class="inner-table">
+        <table>
+          <tr class="entry link bouncy-slide-left" ng-repeat="master in masters | filter:q" ng-click="editUser(master)">
+            <td class="num">{{$index+1}}</td>
+            <td class="name">{{master.name}} {{master.surname}}</td>
+            <td class="master"><div ng-repeat="spec in master.spec">{{spec}}</div></td>
+            <td class="phone">{{master.phone[showphone].number}}
+            <td class="discount">{{master.wageRate}}%</td>
+            <td class="savings"></td>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </table>
+  </div>
+</div>

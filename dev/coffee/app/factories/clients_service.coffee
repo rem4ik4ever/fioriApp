@@ -2,11 +2,9 @@ app.factory 'clientsService', ['$http','$location', (http, location)->
   client_to_edit = {}
   return {
     create: (client)->
-      console.log "create called"
-      result = http.post '/api/clients/create', client
+      result = http.post '/api/clients', client
     all: ()->
-      console.log "all clients"
-      result = http.get '/api/clients/all'
+      result = http.get '/api/clients'
     edit: (client)->
       client_to_edit = client
       location.path('/clients/edit/'+client._id)
@@ -16,5 +14,7 @@ app.factory 'clientsService', ['$http','$location', (http, location)->
       result = http.put '/api/clients/'+client._id, client
     delete: (id)->
       result = http.delete '/api/clients/'+id
+    find: (param)->
+      result = http.post '/api/clients/find', param
   }
 ]

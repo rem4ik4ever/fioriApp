@@ -1,6 +1,5 @@
 app.controller 'ClientCtrl', ['$scope', 'clientsService','param', (scope, clientsService, param)->
   console.log "add user ctrl"
-  animation = false;
   scope.masters = ["Ким Диана", "Дмитрий Ногиев"]
   scope.active = true
   # Client class
@@ -43,7 +42,6 @@ app.controller 'ClientCtrl', ['$scope', 'clientsService','param', (scope, client
       response = clientsService.create scope.client
       response.success (data)->
         console.log data
-        # scope.cleanFields()
         scope.active = false
       response.error ()->
         console.log "Error"

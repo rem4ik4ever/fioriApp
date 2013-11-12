@@ -1,0 +1,30 @@
+<div class="note-form">
+  <div class="header-date">Регистрация на: {{noteDate()}}</div>
+  <div class="registration">
+    <table>
+      <thead>
+        <tr>
+          <th>Клиент</th>
+          <th>услуга</th>
+          <th>Мастер</th>
+          <th>Время и дата</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ким</td>
+          <td>стрижка</td>
+          <td>Ким Диана</td>
+          <td>12:45</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="input-form">
+    <div class="search-client">Зарегистрированный клиент: <input type="text" ng-model="client_name" ng-change="tryFind()" placeholder="Фамилия Имя">
+      <ul>
+        <li ng-repeat="client in clientsFound">{{ client.name }} {{client.surname}}</li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -37,7 +37,20 @@ exports.client = function(req, res, next, id){
     if (err) return next(err);
     if(!client) return next(new Error('Failed to load client' + id));
     req.client = client;
-    next()
+    next();
+  });
+}
+
+exports.find = function(req, res){
+  var param = req.body;
+  Client.find(param ,{name:1, surname:1}).exec(function(err, clients){
+    if (err){
+      res.jsonp('error', {
+        status: 500
+      });
+    } else {
+      res.jsonp(clients);
+    }
   });
 }
 

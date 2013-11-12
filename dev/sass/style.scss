@@ -177,7 +177,6 @@ button:active{
         border: none;
       }
       input:focus{
-        // outline-color: #3497CD;
         outline:none;
         @include box-shadow(inset 0 0 5px 1px #2A759E);
       }
@@ -357,6 +356,11 @@ button:active{
           i:hover{
             color: #77A8DE;
           }
+          .info-line{
+            td{
+              padding-bottom: 0;
+            }
+          }
         }
         ul{
           list-style: none;
@@ -399,9 +403,6 @@ button:active{
         }
         input{
           padding: 2px 3px 2px 3px;
-          // border: 1px solid #000000;
-          // @include border-radius(5px);
-          // @include box-shadow(0 0 2px #000000);
         }
         input:focus{
           outline: none;
@@ -417,6 +418,24 @@ button:active{
         }
         li{
           cursor: pointer;
+        }
+      }
+    }
+    .note-form{
+      width: 100%;
+      height: 80%;
+      padding: 10px 10px 0 10px;
+      .header-date{
+        font-size: 1.3em;
+      }
+      .registration{
+        width: 80%;
+        margin: 30px auto 0 auto;
+        background-color: #fff;
+        padding: 5px 10px 5px 10px;
+        @include box-shadow(0 0 7px #000000);
+        table{
+          width: 100%;
         }
       }
     }

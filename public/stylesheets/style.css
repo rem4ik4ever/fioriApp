@@ -292,6 +292,8 @@ button:active {
           margin: 0 0 0 10px; }
         .main .view .add-client-form .input-form .input-field i:hover {
           color: #77A8DE; }
+        .main .view .add-client-form .input-form .input-field .info-line td {
+          padding-bottom: 0; }
         .main .view .add-client-form .input-form ul {
           list-style: none;
           padding: 0 0 0 5px;
@@ -333,6 +335,22 @@ button:active {
           color: #3370A2; }
         .main .view .add-client-form .service li {
           cursor: pointer; }
+    .main .view .note-form {
+      width: 100%;
+      height: 80%;
+      padding: 10px 10px 0 10px; }
+      .main .view .note-form .header-date {
+        font-size: 1.3em; }
+      .main .view .note-form .registration {
+        width: 80%;
+        margin: 30px auto 0 auto;
+        background-color: #fff;
+        padding: 5px 10px 5px 10px;
+        -moz-box-shadow: 0 0 7px black;
+        -webkit-box-shadow: 0 0 7px black;
+        box-shadow: 0 0 7px black; }
+        .main .view .note-form .registration table {
+          width: 100%; }
 
 @media only screen and (max-width: 1366px) {
   .main .sidebar {
