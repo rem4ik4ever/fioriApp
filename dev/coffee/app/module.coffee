@@ -1,1 +1,1 @@
-app = angular.module 'fioriApp', ['ngRoute']
+app = angular.module 'fioriApp', ['ngRoute','ngAnimate']

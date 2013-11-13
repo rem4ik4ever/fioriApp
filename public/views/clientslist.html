@@ -16,7 +16,7 @@
     </table>
       <div class="inner-table">
         <table>
-          <tr class="entry link bouncy-slide-left" ng-repeat="client in clients | filter:q" ng-click="editUser(client)">
+          <tr class="entry link slide-right" ng-repeat="client in clients | filter:q" ng-click="editUser(client)">
             <td class="num">{{$index+1}}</td>
             <td class="name">{{client.name}} {{client.surname}}</td>
             <td class="master"><div ng-repeat="master in client.masters">{{master}}</div></td>

@@ -1,8 +1,8 @@
-app.directive 'calendar', ['DateService',(DateService)->
+app.directive 'calendar', ['dateService',(dateService)->
   {
     restrict : "EA"
     template : '<div id="datepicker"></div>'
-    link : (scope)->
+    link : (scope, element, attrs)->
       selected_date = ""
       $( "#datepicker" ).datepicker({
         inline: true
@@ -13,10 +13,7 @@ app.directive 'calendar', ['DateService',(DateService)->
         dayNamesMin: [ "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" ]
         monthNames: [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ]
         onSelect: (date, obj)->
-          # selected_date =  new Date(date)
-          DateService.setDate date
-          # console.log selected_date
-          console.log DateService.getDate()
+          dateService.setDate date
       })
   }
 ]

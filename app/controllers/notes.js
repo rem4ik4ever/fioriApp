@@ -12,7 +12,19 @@ exports.create = function(req, res){
 }
 exports.all = function(req, res){
   console.dir("all");
-  Note.find().exec(function(err, notes){
+  Note.find().populate('master', 'name surname').sort('time').exec(function(err, notes){
+    if (err){
+      res.jsonp('error', {
+        status: 500
+      });
+    } else {
+      res.jsonp(notes);
+    }
+  });
+}
+exports.byDate = function(req, res){
+  var params = req.body;
+  Note.find().where('time').gt(params.start_date).lt(params.end_date).populate('master', 'name surname').sort('time').exec(function(err, notes){
     if (err){
       res.jsonp('error', {
         status: 500

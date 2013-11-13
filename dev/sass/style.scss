@@ -305,14 +305,6 @@ button:active{
           font-size: 1.4em;
           font-weight: bold;
         }
-        .added{
-          color: green;
-          float: right;
-          font-size: 3em;
-        }
-        .red-icon{
-          color: red;
-        }
         .birthday{
           font-size: 0.8em;
           margin: 0 0 10px 0;
@@ -427,6 +419,8 @@ button:active{
       padding: 10px 10px 0 10px;
       .header-date{
         font-size: 1.3em;
+        width: 80%;
+        margin: 0 auto 0 auto;
       }
       .registration{
         width: 80%;
@@ -438,8 +432,67 @@ button:active{
           width: 100%;
         }
       }
+      .input-form{
+        width: 80%;
+        min-height: 20%;
+        max-height: 40%;
+        overflow: hidden;
+        margin: 30px auto 0 auto;
+        background-color: #fff;
+        padding: 5px 10px 5px 10px;
+        @include box-shadow(0 0 7px #000000);
+        border: 1px solid black;
+        @include border-radius(6px);
+        min-height: 250px;
+        .pick-client, .pick-service, .pick-master{
+          display: inline-block;
+          vertical-align: top;
+          margin-right: 20px;
+        }
+        .search-client{
+          height: 30%;
+        }
+        i{
+          margin-left: 10px;
+        }
+        i:hover{
+          color: #799ADE;
+          cursor: pointer;
+        }
+        .list{
+          // border: 0px solid black;
+          margin: 10px 0 10px 0;
+          min-height: 0px;
+          max-height: 150px;
+          overflow: auto;
+          // width: 160px;
+          ul{
+            list-style: none;
+            padding: 1px;
+            li{
+              padding: 3px 5px 3px 5px;
+              outline:1px solid #5A5A5A;
+              display: block;
+              cursor: pointer;
+              margin: 2px 0 2px 0;
+            }
+            li:hover{
+              background-color: #B2B0B0;
+              color: white;
+            }
+          }
+        }
+      }
     }
   }
+}
+.added{
+  color: green;
+  float: right;
+  font-size: 3em;
+}
+.red-icon{
+  color: red;
 }
 @media only screen and (max-width: 1366px) {
   .main{
@@ -450,4 +503,470 @@ button:active{
       width: 70%;
     }
   }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+
+
+
+
+/* ------------------------------------------- */
+/* Mixins
+/* ------------------------------------------- */
+
+@mixin easingTimingFunction ($duration) {
+  -webkit-transition: all $duration cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+  -moz-transition: all $duration cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+  -ms-transition: all $duration cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+   -o-transition: all $duration cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+      transition: all $duration cubic-bezier(0.250, 0.460, 0.450, 0.940); /* easeOutQuad */
+
+  -webkit-transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+  -moz-transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+  -ms-transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+   -o-transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+      transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940); /* easeOutQuad */
+}
+
+@mixin bouncyTimingFunction ($duration) {
+  -webkit-transition: all $duration cubic-bezier(0.175, 0.885, 0.320, 1); /* older webkit */
+  -webkit-transition: all $duration cubic-bezier(0.175, 0.885, 0.320, 1.275); 
+     -moz-transition: all $duration cubic-bezier(0.175, 0.885, 0.320, 1.275); 
+      -ms-transition: all $duration cubic-bezier(0.175, 0.885, 0.320, 1.275); 
+       -o-transition: all $duration cubic-bezier(0.175, 0.885, 0.320, 1.275); 
+          transition: all $duration cubic-bezier(0.175, 0.885, 0.320, 1.275); /* easeOutBack */
+
+  -webkit-transition-timing-function: cubic-bezier(0.175, 0.885, 0.450, 1); /* older webkit */
+  -webkit-transition-timing-function: cubic-bezier(0.175, 0.885, 0.450, 1.595); 
+     -moz-transition-timing-function: cubic-bezier(0.175, 0.885, 0.450, 1.595); 
+      -ms-transition-timing-function: cubic-bezier(0.175, 0.885, 0.450, 1.595); 
+       -o-transition-timing-function: cubic-bezier(0.175, 0.885, 0.450, 1.595); 
+          transition-timing-function: cubic-bezier(0.175, 0.885, 0.450, 1.595); /* custom */
+}
+
+@mixin easingOutQuadTimingFunction ($duration) {
+  -webkit-transition: all $duration cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+     -moz-transition: all $duration cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+      -ms-transition: all $duration cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+       -o-transition: all $duration cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+          transition: all $duration cubic-bezier(0.250, 0.460, 0.450, 0.940); /* easeOutQuad */
+
+  -webkit-transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+     -moz-transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+      -ms-transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+       -o-transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940); 
+          transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940); /* easeOutQuad */
+}
+
+@mixin transform ($value) {
+  transform: $value;
+  -ms-transform: $value;
+  -webkit-transform: $value;
+}
+
+/* ------------------------------------------- */
+/* Toggle Fade  
+/* ------------------------------------------- */
+
+.toggle {
+  @include easingTimingFunction(250ms);
+}
+
+.toggle.ng-enter {
+  opacity: 0;
+}
+
+.toggle.ng-enter-active {
+  opacity: 1; 
+}
+
+.toggle.ng-leave {
+  opacity: 1;
+}
+
+.toggle.ng-leave-active {
+  opacity: 0; 
+}
+
+.slide-right, .slide-left, .slide-top, .slide-down {
+  @include easingTimingFunction(250ms);
+}
+
+/* ------------------------------------------- */
+/* Slide Top 
+/* ------------------------------------------- */
+
+.slide-top.ng-enter {
+  @include transform(translateY(60px)); 
+  opacity: 0;
+}
+
+.slide-top.ng-enter-active {
+  @include transform(translateY(0));
+  opacity: 1; 
+}
+
+.slide-top.ng-leave {
+  @include transform(translateY(0));
+  opacity: 1;
+}
+
+.slide-top.ng-leave-active {
+  @include transform(translateY(60px)); 
+  opacity: 0; 
+}
+
+
+/* ------------------------------------------- */
+/* Slide Rigth 
+/* ------------------------------------------- */
+
+.slide-right.ng-enter {
+  @include transform(translateX(60px)); 
+  opacity: 0;
+}
+
+.slide-right.ng-enter-active {
+  @include transform(translateX(0));
+  opacity: 1; 
+}
+
+.slide-right.ng-leave {
+  @include transform(translateX(0));
+  opacity: 1;
+}
+
+.slide-right.ng-leave-active {
+  @include transform(translateX(60px)); 
+  opacity: 0; 
+}
+
+
+/* ------------------------------------------- */
+/* Slide Left 
+/* ------------------------------------------- */
+
+.slide-left.ng-enter {
+  @include transform(translateX(-60px));
+  opacity: 0;
+}
+
+.slide-left.ng-enter-active {
+  @include transform(translateX(0));
+  opacity: 1; 
+}
+
+.slide-left.ng-leave {
+  @include transform(translateX(0));
+  opacity: 1;
+}
+
+.slide-left.ng-leave-active {
+  @include transform(translateX(-60px));
+  opacity: 0; 
+}
+
+/* ------------------------------------------- */
+/* Slide Down
+/* ------------------------------------------- */
+
+.slide-down.ng-enter {
+  @include transform(translateY(-60px)); 
+  opacity: 0;
+}
+
+.slide-down.ng-enter-active {
+  @include transform(translateY(0));
+  opacity: 1; 
+}
+
+.slide-down.ng-leave {
+  @include transform(translateY(0));
+  opacity: 1;
+}
+
+.slide-down.ng-leave-active {
+  @include transform(translateY(-60px)); 
+  opacity: 0; 
+}
+
+
+.bouncy-slide-right, .bouncy-slide-left, .bouncy-slide-top, .bouncy-slide-down {
+  @include bouncyTimingFunction(450ms);
+}
+
+/* ------------------------------------------- */
+/* Bouncy Slide Top 
+/* ------------------------------------------- */
+
+.bouncy-slide-top.ng-enter {
+  @include transform(translateY(240px));
+  opacity: 0;
+}
+
+.bouncy-slide-top.ng-enter-active {
+  @include transform(translateY(0));
+  opacity: 1; 
+}
+
+.bouncy-slide-top.ng-leave {
+  @include transform(translateY(0));
+  opacity: 1;
+}
+
+.bouncy-slide-top.ng-leave-active {
+  @include transform(translateY(240px)); 
+  opacity: 0; 
+}
+
+/* ------------------------------------------- */
+/* Bouncy Slide Rigth 
+/* ------------------------------------------- */
+
+.bouncy-slide-right.ng-enter {
+  @include transform(translateX(240px)); 
+  opacity: 0;
+}
+
+.bouncy-slide-right.ng-enter-active {
+  @include transform(translateX(0));
+  opacity: 1; 
+}
+
+.bouncy-slide-right.ng-leave {
+  @include transform(translateX(0));
+  opacity: 1;
+}
+
+.bouncy-slide-right.ng-leave-active {
+  @include transform(translateX(240px));
+  opacity: 0; 
+}
+
+
+/* ------------------------------------------- */
+/* Bouncy Slide Left 
+/* ------------------------------------------- */
+
+.bouncy-slide-left.ng-enter {
+  @include transform(translateX(-240px));
+  opacity: 0; 
+}
+
+.bouncy-slide-left.ng-enter-active {
+  @include transform(translateX(0));
+  opacity: 1; 
+}
+
+.bouncy-slide-left.ng-leave {
+  @include transform(translateX(0));
+  opacity: 1;
+}
+
+.bouncy-slide-left.ng-leave-active {
+  @include transform(translateX(-240px));
+  opacity: 0; 
+}
+
+/* ------------------------------------------- */
+/* Bouncy Slide Down
+/* ------------------------------------------- */
+
+.bouncy-slide-down.ng-enter {
+  @include transform(translateY(-240px));
+  opacity: 0;
+}
+
+.bouncy-slide-down.ng-enter-active {
+  @include transform(translateY(0));
+  opacity: 1; 
+}
+
+.bouncy-slide-down.ng-leave {
+  @include transform(translateY(0));
+  opacity: 1;
+}
+
+.bouncy-slide-down.ng-leave-active {
+  @include transform(translateY(-240px));
+  opacity: 0; 
+}
+
+
+
+/* ------------------------------------------- */
+/* Scale Fade 
+/* ------------------------------------------- */
+
+.scale-fade {
+  @include easingTimingFunction(250ms);
+}
+
+.scale-fade.ng-enter {
+  @include transform(scale(0.7));
+  opacity: 0;
+}
+
+.scale-fade.ng-enter-active {
+  @include transform(scale(1));
+  opacity: 1; 
+}
+
+.scale-fade.ng-leave {
+  @include transform(scale(1));
+  opacity: 1;
+}
+
+.scale-fade.ng-leave-active {
+  @include transform(scale(0.7)); 
+  opacity: 0; 
+}
+
+/* ------------------------------------------- */
+/* Spin Fade 
+/* ------------------------------------------- */
+
+.spin-toggle {
+  @include easingTimingFunction(250ms);
+}
+
+.spin-toggle.ng-enter {
+  @include transform(rotate(225deg));
+  opacity: 0;
+}
+
+.spin-toggle.ng-enter-active {
+  @include transform(rotate(0deg));
+  opacity: 1; 
+}
+
+.spin-toggle.ng-leave {
+  @include transform(rotate(0deg));
+  opacity: 1;
+}
+
+.spin-toggle.ng-leave-active {
+  @include transform(rotate(90deg)); 
+  opacity: 0; 
+}
+
+
+/* ------------------------------------------- */
+/* Scale in Fade 
+/* ------------------------------------------- */
+
+.scale-fade-in {
+  @include easingOutQuadTimingFunction(250ms);
+}
+
+.scale-fade-in.ng-enter {
+  @include transform(scale(3));
+  opacity: 0;
+}
+
+.scale-fade-in.ng-enter-active {
+  @include transform(scale(1));
+  opacity: 1; 
+}
+
+.scale-fade-in.ng-leave {
+  @include transform(scale(1));
+  opacity: 1;
+}
+
+.scale-fade-in.ng-leave-active {
+  @include transform(scale(3));
+  opacity: 0; 
+}
+
+
+/* ------------------------------------------- */
+/* Bouncy Scale in Fade 
+/* ------------------------------------------- */
+
+.bouncy-scale-in {
+  @include bouncyTimingFunction(450ms);
+}
+
+.bouncy-scale-in.ng-enter {
+  @include transform(scale(3));
+  opacity: 0;
+}
+
+.bouncy-scale-in.ng-enter-active {
+  @include transform(scale(1));
+  opacity: 1; 
+}
+
+.bouncy-scale-in.ng-leave {
+  @include transform(scale(1));
+  opacity: 1;
+}
+
+.bouncy-scale-in.ng-leave-active {
+  @include transform(scale(3));
+  opacity: 0; 
+}
+
+
+/* ------------------------------------------- */
+/* Flip In 
+/* ------------------------------------------- */
+
+.flip-in {
+  @include easingTimingFunction(550ms);
+}
+
+.flip-in.ng-enter {
+  @include transform(perspective(300px) rotateX(90deg));
+  opacity: 0.7;
+}
+
+.flip-in.ng-enter-active {
+  @include transform(perspective(300px) rotateX(0deg));
+  opacity: 1; 
+}
+
+.flip-in.ng-leave {
+  @include transform(perspective(300px) rotateX(0deg));
+  opacity: 1;
+}
+
+.flip-in.ng-leave-active {
+  @include transform(perspective(300px) rotateX(135deg)); 
+  opacity: 0.7; 
+}
+
+/* ------------------------------------------- */
+/* Rotate In 
+/* ------------------------------------------- */
+
+.rotate-in {
+  @include bouncyTimingFunction(550ms);
+}
+
+.rotate-in.ng-enter {
+  @include transform(perspective(300px) rotateY(40deg));
+  opacity: 0.7;
+}
+
+.rotate-in.ng-enter-active {
+  @include transform(perspective(300px) rotateY(0deg));
+  opacity: 1; 
+}
+
+.rotate-in.ng-leave {
+  @include transform(perspective(300px) rotateY(0deg));
+  opacity: 1;
+}
+
+.rotate-in.ng-leave-active {
+  @include transform(perspective(300px) rotateY(-40deg)); 
+  opacity: 0.7; 
 }

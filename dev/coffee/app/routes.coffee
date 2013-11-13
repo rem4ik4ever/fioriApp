@@ -7,10 +7,27 @@ app.config ['$routeProvider', (routeProvider)->
   routeProvider.when '/', {} =
     controller: 'notesCtrl'
     templateUrl: 'views/notes.html'
+    resolve: {
+      notes: (notesService, dateService)->
+        today = dateService.getDate()
+        today.setHours(0)
+        today.setMinutes(0)
+        tomorrow = new Date(today.getTime() + (24 * 60 * 60 * 1000))
+        params = {
+          start_date: today
+          end_date: tomorrow
+        }
+        console.log params
+        request = notesService.byDate(params)
+    }
 
   routeProvider.when '/addnote', {} =
     controller: 'NoteCtrl'
     templateUrl: 'views/note.html'
+    resolve: {
+      masters: (mastersService)->
+        request = mastersService.all()
+    }
 
   routeProvider.when '/note/edit/:id', {} =
     controller: 'NoteCtrl'
@@ -33,8 +50,6 @@ app.config ['$routeProvider', (routeProvider)->
     resolve: {
       clients: (clientsService)->
         request = clientsService.all()
-        request.success (data)->
-          data
     }
   routeProvider.when '/clients/edit/:id', {} =
     controller: 'ClientCtrl'
@@ -68,7 +83,5 @@ app.config ['$routeProvider', (routeProvider)->
     resolve: {
       masters: (mastersService)->
         request = mastersService.all()
-        request.success (data)->
-          data
     }
 ]

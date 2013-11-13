@@ -1,5 +1,8 @@
 <div class="note-form">
-  <div class="header-date">Регистрация на: {{noteDate()}}</div>
+  <div class="header-date">Регистрация на: {{noteDate()}}
+  <i class="added ion-checkmark" ng-show="active"></i>
+  <i class="added ion-thumbsup" ng-show="updated"></i>
+  <i class="added red-icon ion-close-circled" ng-show="removed"></i></div>
   <div class="registration">
     <table>
       <thead>
@@ -12,19 +15,50 @@
       </thead>
       <tbody>
         <tr>
-          <td>Ким</td>
-          <td>стрижка</td>
-          <td>Ким Диана</td>
-          <td>12:45</td>
+          <td>{{client.name}} {{client.surname}}</td>
+          <td>{{service}}</td>
+          <td>{{master.name}} {{master.surname}}</td>
+          <td>{{hours}}:{{mins(minutes)}}</td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div class="input-form">
-    <div class="search-client">Зарегистрированный клиент: <input type="text" ng-model="client_name" ng-change="tryFind()" placeholder="Фамилия Имя">
-      <ul>
-        <li ng-repeat="client in clientsFound">{{ client.name }} {{client.surname}}</li>
-      </ul>
+  <form class="input-form" ng-submit="saveNote()" ng-hide="active">
+    <div class="pick-client">
+      <div class="search-client" ng-hide="unregister_client">
+        <div>Клиент:</div> <input type="text" ng-model="register_client" ng-change="tryFind()" placeholder="Фамилия или Имя" required>
+        <div class="list">
+          <ul>
+            <li ng-repeat="client in clientsFound" ng-click="setClient($index)">{{ client.name }} {{client.surname}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="unregister"><div>Не зарегистрированный клиент:</div> <input type="text" ng-model="unregister_client" placeholder="Имя Фамилия"><i class="ion-ios7-plus" ng-click="setUnregClient()" title="Добавить"></i></div>
     </div>
-  </div>
+    <div class="pick-service">
+      <div class="service"><div>Наименование услуги:</div><input type="text" ng-model="service"></div>
+    </div>
+    <div class="pick-master">
+      <div>Мастер: </div> <input type="text" ng-model="findmaster" placeholder="Фамилия или Имя" required>
+        <div class="list">
+          <ul>
+            <li ng-repeat="master in masters | filter:findmaster" ng-click="setMaster(master)">{{ master.name }} {{master.surname}}</li>
+          </ul>
+        </div>
+    </div>
+    <div class="pick-time">
+      <div>Время:</div>
+      <input type="number" min="8" max="21" ng-model="hours" required>:
+      <input type="number" min="0" max="59" ng-model="minutes" required>
+    </div>
+    <button type="submit">Добавить</button>
+    <div class="schedule">
+      <table>
+        <td>Ким Рем</td>
+        <td>стрижка</td>
+        <td>12:30</td>
+      </table>
+    </div>
+  </form>
+  <button class="newnote" ng-show="active" ng-click="newNote()">Новая запись</button>
 </div>

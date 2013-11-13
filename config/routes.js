@@ -14,6 +14,9 @@ module.exports = function(app){
   
   app.param('clientID', clients.client);
 
+  /*
+   * api reference "masters"
+   */
   var masters = require('../app/controllers/masters');
 
   app.post('/api/masters', masters.create);
@@ -22,6 +25,19 @@ module.exports = function(app){
   app.del('/api/masters/:masterID', masters.destroy);
 
   app.param('masterID', masters.master);
+
+  /*
+   * api reference "notes"
+   */
+   var notes = require('../app/controllers/notes');
+
+   app.post('/api/notes', notes.create);
+   app.get('/api/notes', notes.all);
+   app.post('/api/notes/bydate', notes.byDate);
+   app.put('/api/notes/:noteID', notes.update);
+   app.del('/api/notes/:noteID', notes.destroy);
+
+   app.param('noteID', notes.note);
   
   /*
    * App route

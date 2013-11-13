@@ -1,4 +1,4 @@
-app = angular.module 'fioriApp', ['ngRoute']
+app = angular.module 'fioriApp', ['ngRoute','ngAnimate']
 app.config ['$routeProvider', (routeProvider)->
   
   #
@@ -8,10 +8,27 @@ app.config ['$routeProvider', (routeProvider)->
   routeProvider.when '/', {} =
     controller: 'notesCtrl'
     templateUrl: 'views/notes.html'
+    resolve: {
+      notes: (notesService, dateService)->
+        today = dateService.getDate()
+        today.setHours(0)
+        today.setMinutes(0)
+        tomorrow = new Date(today.getTime() + (24 * 60 * 60 * 1000))
+        params = {
+          start_date: today
+          end_date: tomorrow
+        }
+        console.log params
+        request = notesService.byDate(params)
+    }
 
   routeProvider.when '/addnote', {} =
     controller: 'NoteCtrl'
     templateUrl: 'views/note.html'
+    resolve: {
+      masters: (mastersService)->
+        request = mastersService.all()
+    }
 
   routeProvider.when '/note/edit/:id', {} =
     controller: 'NoteCtrl'
@@ -34,8 +51,6 @@ app.config ['$routeProvider', (routeProvider)->
     resolve: {
       clients: (clientsService)->
         request = clientsService.all()
-        request.success (data)->
-          data
     }
   routeProvider.when '/clients/edit/:id', {} =
     controller: 'ClientCtrl'
@@ -69,8 +84,6 @@ app.config ['$routeProvider', (routeProvider)->
     resolve: {
       masters: (mastersService)->
         request = mastersService.all()
-        request.success (data)->
-          data
     }
 ]
 app.factory 'clientsService', ['$http','$location', (http, location)->
@@ -93,8 +106,12 @@ app.factory 'clientsService', ['$http','$location', (http, location)->
       result = http.post '/api/clients/find', param
   }
 ]
-app.factory 'DateService', [()->
+app.factory 'dateService', [()->
   noteDay = new Date
+  noteDay.setHours 0
+  noteDay.setMinutes 0
+  noteDay.setSeconds 0
+  noteDay.setMilliseconds 0
   return {
     getDate: ()->
       noteDay
@@ -118,6 +135,16 @@ app.factory 'mastersService', ['$http','$location', (http, location)->
       result = http.delete '/api/masters/'+id
     all: ()->
       result = http.get '/api/masters'
+  }
+]
+app.factory 'notesService', ['$http', (http)->
+  return{
+    save: (note)->
+      result = http.post '/api/notes', note
+    all: ()->
+      result = http.get '/api/notes'
+    byDate: (params)->
+      result = http.post '/api/notes/bydate', params
   }
 ]
 app.controller 'ClientCtrl', ['$scope', 'clientsService','param', (scope, clientsService, param)->
@@ -248,12 +275,6 @@ app.controller 'clientsCtrl', ['$scope','clients','clientsService', (scope, clie
   scope.editUser = (client)->
     clientsService.edit client
 ]
-app.controller 'notesCtrl', ['$scope', (scope)->
-  console.log "notes ctrl"
-]
-
-
-
 app.controller 'addNoteCtrl', ['$scope', (scope)->
   console.log "add note ctrl"
 ]
@@ -403,11 +424,14 @@ app.controller 'mastersCtrl', ['$scope','masters','mastersService', (scope, mast
   scope.editUser = (master)->
     mastersService.edit master
 ]
-app.controller 'NoteCtrl', ['$scope','DateService','clientsService' , (scope, DateService, clientsService)->
+app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesService' ,'masters', (scope, dateService, clientsService, notesService, masters)->
   console.log "note ctrl"
+  scope.masters = masters.data
+  console.log masters.data
   months = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"]
+  
   scope.noteDate = ()->
-    date = DateService.getDate()
+    date = dateService.getDate()
     year = date.getFullYear()
     month = date.getMonth()
     if month < 10
@@ -416,23 +440,140 @@ app.controller 'NoteCtrl', ['$scope','DateService','clientsService' , (scope, Da
     if day < 10
       day = "0" + day
     day + " " + months[month] + " " + year + " года"
+  
   scope.tryFind = ()->
-    part = scope.client_name.split(" ")
-    if part.length is 1
-      param = { surname : part[0] }
-    else if part.length is 2
-      param = {surname : part[0] , name : part[1]}
-    request = clientsService.find(param)
+    if scope.register_client isnt "" and scope.register_client isnt undefined
+      part = scope.register_client.split(" ")
+      param = {}
+      if part.length is 1
+        param = { name : part[0] }
+      else if part.length is 2
+        param = {name : part[0], surname : part[1]}
+      request = clientsService.find(param)
+      request.success (data)->
+        scope.clientsFound = data
+    else
+      scope.clientsFound = []
+  
+  scope.setClient = (index)->
+    scope.client = scope.clientsFound[index]
+    scope.register_client = scope.client.name + " " + scope.client.surname
+    scope.clientsFound = []
+    scope.unregister_client = ""
+  
+  scope.setUnregClient = ()->
+    scope.register_client = scope.unregister_client
+    if scope.register_client isnt undefined and scope.register_client isnt ""
+      part = scope.register_client.split " "
+      scope.client = {name: "" , surname: ""}
+      if part.length is 2
+        scope.client.name = part[0]
+        scope.client.surname = part[1]
+      else
+        scope.client.name = part[0]
+    console.log "unregister user"
+  
+  scope.setMaster = (master)->
+    scope.master = master
+    scope.findmaster = scope.master.name + " " + scope.master.surname
+  
+  clearFields = ()->
+    scope.client = {}
+    scope.register_client = ""
+    scope.unregister_client = ""
+    scope.hours = ""
+    scope.minutes = ""
+    scope.service = ""
+    scope.master = ""
+    scope.findmaster = ""
+  scope.mins = (mins)->
+    if mins < 10
+      "0" + mins
+    else
+      mins
+  scope.saveNote = ()->
+    note = {
+      client : {}
+      master : ""
+      service: ""
+      time : ""
+    }
+    
+    reg_date = dateService.getDate()
+    reg_date.setHours(scope.hours)
+    reg_date.setMinutes(scope.minutes)
+    reg_date.setSeconds(0)
+
+    if scope.unregister_client isnt undefined and scope.unregister_client isnt ""
+      note.client.name = scope.unregister_client
+      note.client.id = ""
+    else
+      note.client.name = scope.register_client
+      note.client.id = scope.client._id
+
+    note.master = scope.master._id
+    note.service = scope.service
+    note.time = reg_date
+
+    console.log note
+    request = notesService.save note
     request.success (data)->
-      scope.clientsFound = data
+      console.log data
+      scope.active = true
+    request.error (err)->
+      console.log err
+  
+  scope.newNote = ()->
+    scope.active = false
+    clearFields()
 
   return
 ]
-app.directive 'calendar', ['DateService',(DateService)->
+app.controller 'notesCtrl', ['$scope','notes','notesService','dateService', (scope, notes, notesService, dateService)->
+  console.log "notes ctrl"
+  scope.notes = notes.data
+  console.log scope.notes
+  current_date = dateService.getDate()
+  yearMontDay = (date)->
+    res = new Date(date)
+    month = res.getMonth() + 1
+    if month < 10
+      month = "0" + month
+    res.getDate() + " " + month + " " + res.getFullYear()
+  timeOfDate = (date)->
+    res = new Date(date)
+    minutes = res.getMinutes()
+    if minutes < 10
+      minutes = "0"+minutes
+    res.getHours() + ":" + minutes
+  scope.showTime = (date)->
+    todayDate = yearMontDay new Date()
+    selDate = yearMontDay new Date(date)
+    if todayDate is selDate
+      timeOfDate(date)
+    else
+      selDate + " " + timeOfDate(date)
+  scope.changeDate = ()->
+    console.log "changing date"
+
+  scope.$watch ()->
+    dateService.getDate()
+  , (newDate)->
+    console.log dateService.getDate()
+    console.log current_date
+    newOne = newDate.getFullYear() + " " + newDate.getMonth() + " " + newDate.getDate()
+    oldOne = current_date.getFullYear() + " " + current_date.getMonth() + " " + current_date.getDate()
+    if newOne isnt oldOne
+      console.log "not the same"
+    else 
+      console.log "the same"
+]
+
+app.directive 'calendar', ['dateService',(dateService)->
   {
     restrict : "EA"
     template : '<div id="datepicker"></div>'
-    link : (scope)->
+    link : (scope, element, attrs)->
       selected_date = ""
       $( "#datepicker" ).datepicker({
         inline: true
@@ -443,10 +584,7 @@ app.directive 'calendar', ['DateService',(DateService)->
         dayNamesMin: [ "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" ]
         monthNames: [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ]
         onSelect: (date, obj)->
-          # selected_date =  new Date(date)
-          DateService.setDate date
-          # console.log selected_date
-          console.log DateService.getDate()
+          dateService.setDate date
       })
   }
 ]

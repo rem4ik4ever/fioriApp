@@ -42,8 +42,9 @@ exports.client = function(req, res, next, id){
 }
 
 exports.find = function(req, res){
-  var param = req.body;
-  Client.find(param ,{name:1, surname:1}).exec(function(err, clients){
+  
+  var param = new RegExp(req.body.name, 'i');
+  Client.find({},{name:1, surname:1}).or([{'name' : {$regex: param}}, {'surname': {$regex: param}}]).exec(function(err, clients){
     if (err){
       res.jsonp('error', {
         status: 500
