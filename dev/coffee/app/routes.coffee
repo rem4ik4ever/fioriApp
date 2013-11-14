@@ -25,13 +25,21 @@ app.config ['$routeProvider', (routeProvider)->
     controller: 'NoteCtrl'
     templateUrl: 'views/note.html'
     resolve: {
-      masters: (mastersService)->
+      param: (mastersService)->
         request = mastersService.all()
+        {type: 'add' , masters: request}
+
     }
 
-  routeProvider.when '/note/edit/:id', {} =
+  routeProvider.when '/notes/edit/:note', {} =
     controller: 'NoteCtrl'
     templateUrl: 'views/note.html'
+    resolve: {
+      param: ($route, notesService)->
+        id = $route.current.params.note
+        console.log id
+        {type: 'edit', note: notesService.getEdit(id)}
+    }
   
   #
   # Routes for clients

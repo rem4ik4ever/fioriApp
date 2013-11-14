@@ -26,13 +26,21 @@ app.config ['$routeProvider', (routeProvider)->
     controller: 'NoteCtrl'
     templateUrl: 'views/note.html'
     resolve: {
-      masters: (mastersService)->
+      param: (mastersService)->
         request = mastersService.all()
+        {type: 'add' , masters: request}
+
     }
 
-  routeProvider.when '/note/edit/:id', {} =
+  routeProvider.when '/notes/edit/:note', {} =
     controller: 'NoteCtrl'
     templateUrl: 'views/note.html'
+    resolve: {
+      param: ($route, notesService)->
+        id = $route.current.params.note
+        console.log id
+        {type: 'edit', note: notesService.getEdit(id)}
+    }
   
   #
   # Routes for clients
@@ -137,7 +145,8 @@ app.factory 'mastersService', ['$http','$location', (http, location)->
       result = http.get '/api/masters'
   }
 ]
-app.factory 'notesService', ['$http', (http)->
+app.factory 'notesService', ['$http', '$location', (http, location)->
+  note_to_edit = {}
   return{
     save: (note)->
       result = http.post '/api/notes', note
@@ -145,6 +154,12 @@ app.factory 'notesService', ['$http', (http)->
       result = http.get '/api/notes'
     byDate: (params)->
       result = http.post '/api/notes/bydate', params
+    masterNotes: (params)->
+      result = http.post '/api/notes/bydatemaster', params
+    getEdit: (id)->
+      request = http.get "/api/notes/edit?q="+id
+    update: (note)->
+      request = http.put "/api/notes/"+note.id, note
   }
 ]
 app.controller 'ClientCtrl', ['$scope', 'clientsService','param', (scope, clientsService, param)->
@@ -424,12 +439,29 @@ app.controller 'mastersCtrl', ['$scope','masters','mastersService', (scope, mast
   scope.editUser = (master)->
     mastersService.edit master
 ]
-app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesService' ,'masters', (scope, dateService, clientsService, notesService, masters)->
-  console.log "note ctrl"
-  scope.masters = masters.data
-  console.log masters.data
+app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesService' ,'param', (scope, dateService, clientsService, notesService, param)->
+  editnote = {}
+  scope.active = false
+  scope.updated = false
+  type = param.type
+  console.log type
+  if param.type is 'add'
+    param.masters.success (data)->
+      scope.masters = data
+
+  else if param.type is 'edit'
+    param.note.success (data)->
+      editnote = data
+      setNote()
   months = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"]
-  
+  scope.masterNotes = []
+  scope.intersection = false
+  scope.timeOfDate = (date)->
+    res = new Date(date)
+    minutes = res.getMinutes()
+    if minutes < 10
+      minutes = "0"+minutes
+    res.getHours() + ":" + minutes
   scope.noteDate = ()->
     date = dateService.getDate()
     year = date.getFullYear()
@@ -476,7 +508,23 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
   scope.setMaster = (master)->
     scope.master = master
     scope.findmaster = scope.master.name + " " + scope.master.surname
-  
+    params = {
+      start_date : dateService.getDate()
+      end_date : new Date(dateService.getDate().getTime() + (24 * 60 * 60 * 1000))
+      master : scope.master._id
+    }
+    request = notesService.masterNotes(params)
+    request.success (data)->
+      if param.type is 'edit'
+        for note in data
+          if !_.isEqual(note, editnote)
+            scope.masterNotes.push note
+      else 
+        scope.masterNotes = data
+    request.error (err)->
+      console.log err
+  scope.getMasterNotes = ()->
+    scope.masterNotes
   clearFields = ()->
     scope.client = {}
     scope.register_client = ""
@@ -491,7 +539,23 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
       "0" + mins
     else
       mins
+  scope.checkInter = (time)->
+    noteTime = scope.timeOfDate(time)
+    mins = scope.minutes
+    if mins < 10
+      mins = "0"+mins
+    # console.log time + " " + scope.hours+":"+mins
+    cur_time = scope.hours+":"+mins
+    if noteTime is cur_time
+      scope.intersection = true
+      return "intersection"
+    return ""
+  scope.timeChange = ()->
+    scope.intersection = false
   scope.saveNote = ()->
+    if scope.intersection
+      alert("Существует совпадение по времени")
+      return
     note = {
       client : {}
       master : ""
@@ -515,17 +579,36 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
     note.service = scope.service
     note.time = reg_date
 
-    console.log note
-    request = notesService.save note
-    request.success (data)->
-      console.log data
-      scope.active = true
-    request.error (err)->
-      console.log err
-  
+    if type is 'add'
+      request = notesService.save note
+      request.success (data)->
+        scope.active = true
+      request.error (err)->
+        console.log err
+    else if type is 'edit'
+      note.id = editnote._id
+      request = notesService.update note
+      request.success (data)->
+        scope.updated = true
+      request.error (err)->
+        console.log err
+  setNote = ()->
+    console.log editnote
+    scope.client = editnote.client
+    scope.register_client = scope.client.name
+    scope.master = editnote.master
+    scope.setMaster(scope.master)
+    scope.findmaster = scope.master.name + " " + scope.master.surname
+    scope.service = editnote.service
+    scope.hours = new Date(editnote.time).getHours()
+    scope.minutes = new Date(editnote.time).getMinutes()
   scope.newNote = ()->
     scope.active = false
     clearFields()
+  scope.formState = ()->
+    if scope.active is true or scope.updated is true
+      true
+    false
 
   return
 ]
@@ -534,39 +617,73 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService', (sco
   scope.notes = notes.data
   console.log scope.notes
   current_date = dateService.getDate()
+  scope.oldDate = true
+  
   yearMontDay = (date)->
     res = new Date(date)
     month = res.getMonth() + 1
     if month < 10
       month = "0" + month
-    res.getDate() + " " + month + " " + res.getFullYear()
+    res.getDate() + "/" + month + "/" + res.getFullYear()
+  
   timeOfDate = (date)->
     res = new Date(date)
     minutes = res.getMinutes()
     if minutes < 10
       minutes = "0"+minutes
     res.getHours() + ":" + minutes
+  
   scope.showTime = (date)->
     todayDate = yearMontDay new Date()
     selDate = yearMontDay new Date(date)
     if todayDate is selDate
       timeOfDate(date)
     else
+      scope.oldDate = false
       selDate + " " + timeOfDate(date)
+  
   scope.changeDate = ()->
     console.log "changing date"
 
+  scope.getId = (note)->
+    note._id
+  scope.deleteNote = (note)->
+    console.log note
   scope.$watch ()->
     dateService.getDate()
   , (newDate)->
-    console.log dateService.getDate()
-    console.log current_date
     newOne = newDate.getFullYear() + " " + newDate.getMonth() + " " + newDate.getDate()
     oldOne = current_date.getFullYear() + " " + current_date.getMonth() + " " + current_date.getDate()
     if newOne isnt oldOne
       console.log "not the same"
+      today = newDate
+      today.setHours(0)
+      today.setMinutes(0)
+      tomorrow = new Date(today.getTime() + (24 * 60 * 60 * 1000))
+      params = {
+        start_date: today
+        end_date: tomorrow
+      }
+      request = notesService.byDate params
+      request.success (data)->
+        scope.notes = data
+      request.error (err)->
+        console.log err
     else 
-      console.log "the same"
+      scope.oldDate = true
+      today = dateService.getDate()
+      today.setHours(0)
+      today.setMinutes(0)
+      tomorrow = new Date(today.getTime() + (24 * 60 * 60 * 1000))
+      params = {
+        start_date: today
+        end_date: tomorrow
+      }
+      request = notesService.byDate params
+      request.success (data)->
+        scope.notes = data
+      request.error (err)->
+        console.log err
 ]
 
 app.directive 'calendar', ['dateService',(dateService)->
@@ -579,7 +696,7 @@ app.directive 'calendar', ['dateService',(dateService)->
         inline: true
         showOtherMonths: true
         dateFormat: 'yy-mm-dd'
-        minDate: new Date()
+        minDate: new Date('2013-11-14')
         maxDate: '+1y'
         dayNamesMin: [ "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс" ]
         monthNames: [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" ]

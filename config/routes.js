@@ -33,7 +33,9 @@ module.exports = function(app){
 
    app.post('/api/notes', notes.create);
    app.get('/api/notes', notes.all);
+   app.get('/api/notes/edit', notes.one)
    app.post('/api/notes/bydate', notes.byDate);
+   app.post('/api/notes/bydatemaster', notes.byDateMaster);
    app.put('/api/notes/:noteID', notes.update);
    app.del('/api/notes/:noteID', notes.destroy);
 

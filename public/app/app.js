@@ -28,15 +28,30 @@
         controller: 'NoteCtrl',
         templateUrl: 'views/note.html',
         resolve: {
-          masters: function(mastersService) {
+          param: function(mastersService) {
             var request;
-            return request = mastersService.all();
+            request = mastersService.all();
+            return {
+              type: 'add',
+              masters: request
+            };
           }
         }
       });
-      routeProvider.when('/note/edit/:id', {
+      routeProvider.when('/notes/edit/:note', {
         controller: 'NoteCtrl',
-        templateUrl: 'views/note.html'
+        templateUrl: 'views/note.html',
+        resolve: {
+          param: function($route, notesService) {
+            var id;
+            id = $route.current.params.note;
+            console.log(id);
+            return {
+              type: 'edit',
+              note: notesService.getEdit(id)
+            };
+          }
+        }
       });
       routeProvider.when('/addclient', {
         controller: 'ClientCtrl',
@@ -197,7 +212,9 @@
   ]);
 
   app.factory('notesService', [
-    '$http', function(http) {
+    '$http', '$location', function(http, location) {
+      var note_to_edit;
+      note_to_edit = {};
       return {
         save: function(note) {
           var result;
@@ -210,6 +227,18 @@
         byDate: function(params) {
           var result;
           return result = http.post('/api/notes/bydate', params);
+        },
+        masterNotes: function(params) {
+          var result;
+          return result = http.post('/api/notes/bydatemaster', params);
+        },
+        getEdit: function(id) {
+          var request;
+          return request = http.get("/api/notes/edit?q=" + id);
+        },
+        update: function(note) {
+          var request;
+          return request = http.put("/api/notes/" + note.id, note);
         }
       };
     }
@@ -577,12 +606,35 @@
   ]);
 
   app.controller('NoteCtrl', [
-    '$scope', 'dateService', 'clientsService', 'notesService', 'masters', function(scope, dateService, clientsService, notesService, masters) {
-      var clearFields, months;
-      console.log("note ctrl");
-      scope.masters = masters.data;
-      console.log(masters.data);
+    '$scope', 'dateService', 'clientsService', 'notesService', 'param', function(scope, dateService, clientsService, notesService, param) {
+      var clearFields, editnote, months, setNote, type;
+      editnote = {};
+      scope.active = false;
+      scope.updated = false;
+      type = param.type;
+      console.log(type);
+      if (param.type === 'add') {
+        param.masters.success(function(data) {
+          return scope.masters = data;
+        });
+      } else if (param.type === 'edit') {
+        param.note.success(function(data) {
+          editnote = data;
+          return setNote();
+        });
+      }
       months = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"];
+      scope.masterNotes = [];
+      scope.intersection = false;
+      scope.timeOfDate = function(date) {
+        var minutes, res;
+        res = new Date(date);
+        minutes = res.getMinutes();
+        if (minutes < 10) {
+          minutes = "0" + minutes;
+        }
+        return res.getHours() + ":" + minutes;
+      };
       scope.noteDate = function() {
         var date, day, month, year;
         date = dateService.getDate();
@@ -598,7 +650,7 @@
         return day + " " + months[month] + " " + year + " года";
       };
       scope.tryFind = function() {
-        var param, part, request;
+        var part, request;
         if (scope.register_client !== "" && scope.register_client !== void 0) {
           part = scope.register_client.split(" ");
           param = {};
@@ -645,8 +697,38 @@
         return console.log("unregister user");
       };
       scope.setMaster = function(master) {
+        var params, request;
         scope.master = master;
-        return scope.findmaster = scope.master.name + " " + scope.master.surname;
+        scope.findmaster = scope.master.name + " " + scope.master.surname;
+        params = {
+          start_date: dateService.getDate(),
+          end_date: new Date(dateService.getDate().getTime() + (24 * 60 * 60 * 1000)),
+          master: scope.master._id
+        };
+        request = notesService.masterNotes(params);
+        request.success(function(data) {
+          var note, _i, _len, _results;
+          if (param.type === 'edit') {
+            _results = [];
+            for (_i = 0, _len = data.length; _i < _len; _i++) {
+              note = data[_i];
+              if (!_.isEqual(note, editnote)) {
+                _results.push(scope.masterNotes.push(note));
+              } else {
+                _results.push(void 0);
+              }
+            }
+            return _results;
+          } else {
+            return scope.masterNotes = data;
+          }
+        });
+        return request.error(function(err) {
+          return console.log(err);
+        });
+      };
+      scope.getMasterNotes = function() {
+        return scope.masterNotes;
       };
       clearFields = function() {
         scope.client = {};
@@ -665,8 +747,29 @@
           return mins;
         }
       };
+      scope.checkInter = function(time) {
+        var cur_time, mins, noteTime;
+        noteTime = scope.timeOfDate(time);
+        mins = scope.minutes;
+        if (mins < 10) {
+          mins = "0" + mins;
+        }
+        cur_time = scope.hours + ":" + mins;
+        if (noteTime === cur_time) {
+          scope.intersection = true;
+          return "intersection";
+        }
+        return "";
+      };
+      scope.timeChange = function() {
+        return scope.intersection = false;
+      };
       scope.saveNote = function() {
         var note, reg_date, request;
+        if (scope.intersection) {
+          alert("Существует совпадение по времени");
+          return;
+        }
         note = {
           client: {},
           master: "",
@@ -687,19 +790,45 @@
         note.master = scope.master._id;
         note.service = scope.service;
         note.time = reg_date;
-        console.log(note);
-        request = notesService.save(note);
-        request.success(function(data) {
-          console.log(data);
-          return scope.active = true;
-        });
-        return request.error(function(err) {
-          return console.log(err);
-        });
+        if (type === 'add') {
+          request = notesService.save(note);
+          request.success(function(data) {
+            return scope.active = true;
+          });
+          return request.error(function(err) {
+            return console.log(err);
+          });
+        } else if (type === 'edit') {
+          note.id = editnote._id;
+          request = notesService.update(note);
+          request.success(function(data) {
+            return scope.updated = true;
+          });
+          return request.error(function(err) {
+            return console.log(err);
+          });
+        }
+      };
+      setNote = function() {
+        console.log(editnote);
+        scope.client = editnote.client;
+        scope.register_client = scope.client.name;
+        scope.master = editnote.master;
+        scope.setMaster(scope.master);
+        scope.findmaster = scope.master.name + " " + scope.master.surname;
+        scope.service = editnote.service;
+        scope.hours = new Date(editnote.time).getHours();
+        return scope.minutes = new Date(editnote.time).getMinutes();
       };
       scope.newNote = function() {
         scope.active = false;
         return clearFields();
+      };
+      scope.formState = function() {
+        if (scope.active === true || scope.updated === true) {
+          true;
+        }
+        return false;
       };
     }
   ]);
@@ -711,6 +840,7 @@
       scope.notes = notes.data;
       console.log(scope.notes);
       current_date = dateService.getDate();
+      scope.oldDate = true;
       yearMontDay = function(date) {
         var month, res;
         res = new Date(date);
@@ -718,7 +848,7 @@
         if (month < 10) {
           month = "0" + month;
         }
-        return res.getDate() + " " + month + " " + res.getFullYear();
+        return res.getDate() + "/" + month + "/" + res.getFullYear();
       };
       timeOfDate = function(date) {
         var minutes, res;
@@ -736,24 +866,59 @@
         if (todayDate === selDate) {
           return timeOfDate(date);
         } else {
+          scope.oldDate = false;
           return selDate + " " + timeOfDate(date);
         }
       };
       scope.changeDate = function() {
         return console.log("changing date");
       };
+      scope.getId = function(note) {
+        return note._id;
+      };
+      scope.deleteNote = function(note) {
+        return console.log(note);
+      };
       return scope.$watch(function() {
         return dateService.getDate();
       }, function(newDate) {
-        var newOne, oldOne;
-        console.log(dateService.getDate());
-        console.log(current_date);
+        var newOne, oldOne, params, request, today, tomorrow;
         newOne = newDate.getFullYear() + " " + newDate.getMonth() + " " + newDate.getDate();
         oldOne = current_date.getFullYear() + " " + current_date.getMonth() + " " + current_date.getDate();
         if (newOne !== oldOne) {
-          return console.log("not the same");
+          console.log("not the same");
+          today = newDate;
+          today.setHours(0);
+          today.setMinutes(0);
+          tomorrow = new Date(today.getTime() + (24 * 60 * 60 * 1000));
+          params = {
+            start_date: today,
+            end_date: tomorrow
+          };
+          request = notesService.byDate(params);
+          request.success(function(data) {
+            return scope.notes = data;
+          });
+          return request.error(function(err) {
+            return console.log(err);
+          });
         } else {
-          return console.log("the same");
+          scope.oldDate = true;
+          today = dateService.getDate();
+          today.setHours(0);
+          today.setMinutes(0);
+          tomorrow = new Date(today.getTime() + (24 * 60 * 60 * 1000));
+          params = {
+            start_date: today,
+            end_date: tomorrow
+          };
+          request = notesService.byDate(params);
+          request.success(function(data) {
+            return scope.notes = data;
+          });
+          return request.error(function(err) {
+            return console.log(err);
+          });
         }
       });
     }
@@ -771,7 +936,7 @@
             inline: true,
             showOtherMonths: true,
             dateFormat: 'yy-mm-dd',
-            minDate: new Date(),
+            minDate: new Date('2013-11-14'),
             maxDate: '+1y',
             dayNamesMin: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
             monthNames: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],

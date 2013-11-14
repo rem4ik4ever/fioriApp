@@ -34,6 +34,18 @@ exports.byDate = function(req, res){
     }
   });
 }
+exports.byDateMaster = function(req, res){
+  var params = req.body;
+  Note.find().where('master').equals(params.master).where('time').gt(params.start_date).lt(params.end_date).populate('master', 'name surname').sort('time').exec(function(err, notes){
+    if (err){
+      res.jsonp('error', {
+        status: 500
+      });
+    } else {
+      res.jsonp(notes);
+    }
+  });
+}
 exports.update = function(req, res){
   var note = req.note;
   console.log("trying to update");
@@ -42,7 +54,20 @@ exports.update = function(req, res){
     res.jsonp({message: "Updated"})
   });
 }
-
+exports.one = function(req, res){
+  var note_id = req.query.q
+  console.dir(note_id);
+  Note.findOne({_id : note_id}).populate('master', 'name surname').exec(function(err, note){
+    if (err){
+      res.jsonp('error', {
+        status: 500
+      });
+    } else {
+      res.jsonp(note);
+    }
+  });
+  
+}
 
 exports.note = function(req, res, next, id){
   Note.load(id, function(err, note){

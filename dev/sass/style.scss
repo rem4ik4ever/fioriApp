@@ -265,7 +265,12 @@ button:active{
                   @include transition(opacity 300ms ease);
                   cursor: pointer;
                   margin-right: 10px;
+                  color: #9C9C9C;
                 }
+                a{
+                  color: #9C9C9C; 
+                }
+
               }
             }
             .entry:hover{
@@ -276,9 +281,18 @@ button:active{
                 i{
                   opacity: 1;
                   @include transition(opacity 300ms ease);
+                  color: #ffffff;
+                }
+                a{
+                  opacity: 1;
+                  @include transition(opacity 300ms ease); 
+                  color: #ffffff;
                 }
                 i:hover{
                   color: #77A8DE;
+                }
+                a:hover{
+                  color: #77A8DE; 
                 }
               }
             }
@@ -435,8 +449,8 @@ button:active{
       .input-form{
         width: 80%;
         min-height: 20%;
-        max-height: 40%;
-        overflow: hidden;
+        max-height: 80%;
+        overflow: auto;
         margin: 30px auto 0 auto;
         background-color: #fff;
         padding: 5px 10px 5px 10px;
@@ -483,6 +497,38 @@ button:active{
           }
         }
       }
+    }
+  }
+}
+.schedule{
+  // display: inline;
+  vertical-align: top;
+  table{
+    width: 60%;
+    margin: 5px 10px 20px 0;
+    .reg_note{
+      height: 44px;
+      border: 1px solid #000000;
+      font-size: 1.3em;
+      margin: 2px 0 2px 0;
+      padding: 7px 10px 7px 10px;
+      background-color: #E7E7E7;
+      .client{
+        padding-left: 20px;
+        width: 60%;
+      }
+      .time{
+        text-align: right;
+        padding-right: 20px;
+      }
+    }
+    .intersection{
+      background-color: #E34E4E;
+      color: white;
+    }
+    .highlight{
+      background-color: #33BE53;
+      color: white; 
     }
   }
 }

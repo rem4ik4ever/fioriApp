@@ -1,8 +1,7 @@
 <div class="note-form">
   <div class="header-date">Регистрация на: {{noteDate()}}
   <i class="added ion-checkmark" ng-show="active"></i>
-  <i class="added ion-thumbsup" ng-show="updated"></i>
-  <i class="added red-icon ion-close-circled" ng-show="removed"></i></div>
+  <i class="added ion-thumbsup" ng-show="updated"></i></div>
   <div class="registration">
     <table>
       <thead>
@@ -48,15 +47,18 @@
     </div>
     <div class="pick-time">
       <div>Время:</div>
-      <input type="number" min="8" max="21" ng-model="hours" required>:
-      <input type="number" min="0" max="59" ng-model="minutes" required>
+      <input type="number" min="8" max="21" ng-model="hours" ng-change="timeChange()" required>:
+      <input type="number" min="0" max="59" ng-model="minutes" ng-change="timeChange()" required>
     </div>
     <button type="submit">Добавить</button>
+    <h3 ng-show="master">{{master.name}} {{master.surname}} записи на {{noteDate()}}</h3>
     <div class="schedule">
       <table>
-        <td>Ким Рем</td>
-        <td>стрижка</td>
-        <td>12:30</td>
+        <tr class="reg_note {{checkInter(mnotes.time)}}" ng-repeat="mnotes in getMasterNotes()">
+          <td class="client">{{mnotes.client.name}}</td>
+          <td>{{mnotes.service}}</td>
+          <td class="time">{{timeOfDate(mnotes.time)}}</td>
+        </tr>
       </table>
     </div>
   </form>

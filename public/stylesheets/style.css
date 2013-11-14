@@ -214,7 +214,10 @@ button:active {
                 -o-transition: opacity 300ms ease;
                 transition: opacity 300ms ease;
                 cursor: pointer;
-                margin-right: 10px; }
+                margin-right: 10px;
+                color: #9C9C9C; }
+              .main .view .registration-list .table .inner-table table .entry .entry-controls a {
+                color: #9C9C9C; }
           .main .view .registration-list .table .inner-table table .entry:hover {
             background-color: #B1B1B1;
             -webkit-transition: background-color 300ms ease;
@@ -229,8 +232,19 @@ button:active {
               -moz-transition: opacity 300ms ease;
               -ms-transition: opacity 300ms ease;
               -o-transition: opacity 300ms ease;
-              transition: opacity 300ms ease; }
+              transition: opacity 300ms ease;
+              color: #ffffff; }
+            .main .view .registration-list .table .inner-table table .entry:hover .entry-controls a {
+              opacity: 1;
+              -webkit-transition: opacity 300ms ease;
+              -moz-transition: opacity 300ms ease;
+              -ms-transition: opacity 300ms ease;
+              -o-transition: opacity 300ms ease;
+              transition: opacity 300ms ease;
+              color: #ffffff; }
             .main .view .registration-list .table .inner-table table .entry:hover .entry-controls i:hover {
+              color: #77A8DE; }
+            .main .view .registration-list .table .inner-table table .entry:hover .entry-controls a:hover {
               color: #77A8DE; }
     .main .view .add-client-form {
       padding: 10px 10px 10px 10px;
@@ -350,8 +364,8 @@ button:active {
       .main .view .note-form .input-form {
         width: 80%;
         min-height: 20%;
-        max-height: 40%;
-        overflow: hidden;
+        max-height: 80%;
+        overflow: auto;
         margin: 30px auto 0 auto;
         background-color: #fff;
         padding: 5px 10px 5px 10px;
@@ -393,6 +407,31 @@ button:active {
             .main .view .note-form .input-form .list ul li:hover {
               background-color: #B2B0B0;
               color: white; }
+
+.schedule {
+  vertical-align: top; }
+  .schedule table {
+    width: 60%;
+    margin: 5px 10px 20px 0; }
+    .schedule table .reg_note {
+      height: 44px;
+      border: 1px solid #000000;
+      font-size: 1.3em;
+      margin: 2px 0 2px 0;
+      padding: 7px 10px 7px 10px;
+      background-color: #E7E7E7; }
+      .schedule table .reg_note .client {
+        padding-left: 20px;
+        width: 60%; }
+      .schedule table .reg_note .time {
+        text-align: right;
+        padding-right: 20px; }
+    .schedule table .intersection {
+      background-color: #E34E4E;
+      color: white; }
+    .schedule table .highlight {
+      background-color: #33BE53;
+      color: white; }
 
 .added {
   color: green;

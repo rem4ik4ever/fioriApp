@@ -20,10 +20,10 @@
             <td class="type">{{note.service}}</td>
             <td class="master">{{note.master.name}} {{note.master.surname}}</td>
             <td class="time">{{showTime(note.time)}}
-              <div class="entry-controls">
-                <i title="Редактировать" class="ion-ios7-compose edit"></i>
+              <div class="entry-controls" ng-show="oldDate">
+                <a href="#/notes/edit/{{getId(note)}}"><i title="Редактировать" class="ion-ios7-compose edit"></i></a>
                 <i title="Выполнено" class="ion-checkmark-circled"></i>
-                <i title="Невыполнено/Удалить" class="ion-close-circled"></i>
+                <i title="Невыполнено/Удалить" class="ion-close-circled" ng-click="deleteNote(note)"></i>
               </div>
             </td>
           </tr>
