@@ -49,8 +49,8 @@ app.config ['$routeProvider', (routeProvider)->
     controller: 'ClientCtrl'
     templateUrl: 'views/client.html'
     resolve: {
-      param: ()->
-        {type :'add', client : null}
+      param: (mastersService)->
+        {type :'add', client : null, masters: mastersService.all()}
     }
   routeProvider.when '/clients', {} =
     controller: 'clientsCtrl'
@@ -63,8 +63,8 @@ app.config ['$routeProvider', (routeProvider)->
     controller: 'ClientCtrl'
     templateUrl: 'views/client.html'
     resolve: {
-      param: (clientsService)->
-        {type : 'edit', client : clientsService.getEdit()}
+      param: (clientsService, mastersService)->
+        {type : 'edit', client : clientsService.getEdit(), masters: mastersService.all()}
     }
   
   #

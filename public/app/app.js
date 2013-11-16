@@ -57,10 +57,11 @@
         controller: 'ClientCtrl',
         templateUrl: 'views/client.html',
         resolve: {
-          param: function() {
+          param: function(mastersService) {
             return {
               type: 'add',
-              client: null
+              client: null,
+              masters: mastersService.all()
             };
           }
         }
@@ -79,10 +80,11 @@
         controller: 'ClientCtrl',
         templateUrl: 'views/client.html',
         resolve: {
-          param: function(clientsService) {
+          param: function(clientsService, mastersService) {
             return {
               type: 'edit',
-              client: clientsService.getEdit()
+              client: clientsService.getEdit(),
+              masters: mastersService.all()
             };
           }
         }
@@ -248,7 +250,12 @@
     '$scope', 'clientsService', 'param', function(scope, clientsService, param) {
       var client, date, day, month, update, year;
       console.log("add user ctrl");
-      scope.masters = ["Ким Диана", "Дмитрий Ногиев"];
+      param.masters.success(function(data) {
+        return scope.masters = data;
+      });
+      param.masters.error(function(err) {
+        return console.log(err);
+      });
       scope.active = true;
       client = function() {
         return {

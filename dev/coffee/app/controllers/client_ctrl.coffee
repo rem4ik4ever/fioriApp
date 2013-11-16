@@ -1,6 +1,9 @@
 app.controller 'ClientCtrl', ['$scope', 'clientsService','param', (scope, clientsService, param)->
   console.log "add user ctrl"
-  scope.masters = ["Ким Диана", "Дмитрий Ногиев"]
+  param.masters.success (data)->
+    scope.masters = data
+  param.masters.error (err)->
+    console.log err
   scope.active = true
   # Client class
   client = ()-> 

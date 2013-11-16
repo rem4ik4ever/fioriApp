@@ -50,8 +50,8 @@ app.config ['$routeProvider', (routeProvider)->
     controller: 'ClientCtrl'
     templateUrl: 'views/client.html'
     resolve: {
-      param: ()->
-        {type :'add', client : null}
+      param: (mastersService)->
+        {type :'add', client : null, masters: mastersService.all()}
     }
   routeProvider.when '/clients', {} =
     controller: 'clientsCtrl'
@@ -64,8 +64,8 @@ app.config ['$routeProvider', (routeProvider)->
     controller: 'ClientCtrl'
     templateUrl: 'views/client.html'
     resolve: {
-      param: (clientsService)->
-        {type : 'edit', client : clientsService.getEdit()}
+      param: (clientsService, mastersService)->
+        {type : 'edit', client : clientsService.getEdit(), masters: mastersService.all()}
     }
   
   #
@@ -164,7 +164,10 @@ app.factory 'notesService', ['$http', '$location', (http, location)->
 ]
 app.controller 'ClientCtrl', ['$scope', 'clientsService','param', (scope, clientsService, param)->
   console.log "add user ctrl"
-  scope.masters = ["Ким Диана", "Дмитрий Ногиев"]
+  param.masters.success (data)->
+    scope.masters = data
+  param.masters.error (err)->
+    console.log err
   scope.active = true
   # Client class
   client = ()-> 

@@ -71,10 +71,10 @@
       </table>
       <div>Постоянный мастер: <div class="input-field"><select ng-model="clientmaster">
         <option value=""></option>
-        <option ng-repeat="master in masters">{{master}} </option>
+        <option ng-repeat="master in masters">{{master.name}} {{master.surname}}</option>
       </select><i title="Добавить мастера" ng-click="addMaster(clientmaster)" class="ion-ios7-plus"></i>
       <ul>
-        <li ng-repeat="master in client.masters">{{master}} <i title="Убрать мастера" ng-click="removeMaster(master)" class="ion-minus-circled"></i></li>
+        <li ng-repeat="master in client.masters">{{master}}<i title="Убрать мастера" ng-click="removeMaster(master)" class="ion-minus-circled"></i></li>
       </ul>
       </div>
       </div>
