@@ -10,7 +10,7 @@
           <th class="phone"><select ng-model="cur_type" ng-options="type for type in types" ng-change="changePhone()">
           </select></th>
           <th class="discount">Ставка</th>
-          <th class="savings"></th>
+<!--           <th class="savings"></th> -->
         </tr>
       </thead>
     </table>
@@ -22,7 +22,7 @@
             <td class="master"><div ng-repeat="spec in master.spec">{{spec}}</div></td>
             <td class="phone">{{master.phone[showphone].number}}
             <td class="discount">{{master.wageRate}}%</td>
-            <td class="savings"></td>
+<!--             <td class="savings"></td> -->
             </td>
           </tr>
         </table>

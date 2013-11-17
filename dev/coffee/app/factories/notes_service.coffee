@@ -13,5 +13,7 @@ app.factory 'notesService', ['$http', '$location', (http, location)->
       request = http.get "/api/notes/edit?q="+id
     update: (note)->
       request = http.put "/api/notes/"+note.id, note
+    delete: (id)->
+      request = http.delete "/api/notes/"+id
   }
 ]

@@ -1,3 +1,4 @@
+<div class="search">Быстрый поиск: <input type="text" ng-model="q"></div>
 <div class="registration-list">
   <div class="table">
     <table>
@@ -14,7 +15,7 @@
     </table>
       <div class="inner-table">
         <table>
-          <tr class="entry" ng-repeat="note in notes">
+          <tr class="entry" ng-repeat="note in notes | filter:q">
             <td class="num">{{$index+1}}</td>
             <td class="client">{{note.client.name}}</td>
             <td class="type">{{note.service}}</td>

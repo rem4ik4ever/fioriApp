@@ -160,6 +160,8 @@ app.factory 'notesService', ['$http', '$location', (http, location)->
       request = http.get "/api/notes/edit?q="+id
     update: (note)->
       request = http.put "/api/notes/"+note.id, note
+    delete: (id)->
+      request = http.delete "/api/notes/"+id
   }
 ]
 app.controller 'ClientCtrl', ['$scope', 'clientsService','param', (scope, clientsService, param)->
@@ -650,8 +652,18 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService', (sco
 
   scope.getId = (note)->
     note._id
+  
   scope.deleteNote = (note)->
     console.log note
+    id = note._id
+    answer = confirm "Удалить запись клиента " + note.client.name + "?"
+    if answer
+      request = notesService.delete(id)
+      request.success ()->
+        notesrequest = notesService.all()
+        notesrequest.success (data)->
+          scope.notes = data
+
   scope.$watch ()->
     dateService.getDate()
   , (newDate)->

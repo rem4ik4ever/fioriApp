@@ -33,8 +33,18 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService', (sco
 
   scope.getId = (note)->
     note._id
+  
   scope.deleteNote = (note)->
     console.log note
+    id = note._id
+    answer = confirm "Удалить запись клиента " + note.client.name + "?"
+    if answer
+      request = notesService.delete(id)
+      request.success ()->
+        notesrequest = notesService.all()
+        notesrequest.success (data)->
+          scope.notes = data
+
   scope.$watch ()->
     dateService.getDate()
   , (newDate)->

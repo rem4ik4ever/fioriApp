@@ -12,7 +12,8 @@ var NoteSchema = new Schema({
     ref: 'Master'
   },
   service : String,
-  time: Date
+  time: Date,
+  complete: {type: Boolean, default: false}
 });
 
 NoteSchema.statics = {

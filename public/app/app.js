@@ -241,6 +241,10 @@
         update: function(note) {
           var request;
           return request = http.put("/api/notes/" + note.id, note);
+        },
+        "delete": function(id) {
+          var request;
+          return request = http["delete"]("/api/notes/" + id);
         }
       };
     }
@@ -884,7 +888,20 @@
         return note._id;
       };
       scope.deleteNote = function(note) {
-        return console.log(note);
+        var answer, id, request;
+        console.log(note);
+        id = note._id;
+        answer = confirm("Удалить запись клиента " + note.client.name + "?");
+        if (answer) {
+          request = notesService["delete"](id);
+          return request.success(function() {
+            var notesrequest;
+            notesrequest = notesService.all();
+            return notesrequest.success(function(data) {
+              return scope.notes = data;
+            });
+          });
+        }
       };
       return scope.$watch(function() {
         return dateService.getDate();
