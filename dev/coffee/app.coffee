@@ -94,6 +94,12 @@ app.config ['$routeProvider', (routeProvider)->
         request = mastersService.all()
     }
 ]
+app.factory 'accountService', ['$http', (http)->
+	return{
+		create: (account)->
+			request = http.post '/api/account', account
+	}
+]
 app.factory 'clientsService', ['$http','$location', (http, location)->
   client_to_edit = {}
   return {
@@ -115,7 +121,7 @@ app.factory 'clientsService', ['$http','$location', (http, location)->
   }
 ]
 app.factory 'dateService', [()->
-  noteDay = new Date
+  noteDay = new Date()
   noteDay.setHours 0
   noteDay.setMinutes 0
   noteDay.setSeconds 0
@@ -450,6 +456,8 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
   scope.updated = false
   type = param.type
   console.log type
+  current_date = dateService.getDate()
+  scope.requireminutes = 60
   if param.type is 'add'
     param.masters.success (data)->
       scope.masters = data
@@ -513,19 +521,28 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
   scope.setMaster = (master)->
     scope.master = master
     scope.findmaster = scope.master.name + " " + scope.master.surname
+    start = dateService.getDate()
+    start.setHours 0
+    start.setMinutes 0
+    start.setSeconds 0
+    start.setMilliseconds 0
     params = {
       start_date : dateService.getDate()
       end_date : new Date(dateService.getDate().getTime() + (24 * 60 * 60 * 1000))
       master : scope.master._id
     }
+    console.log params
     request = notesService.masterNotes(params)
     request.success (data)->
       if param.type is 'edit'
+        console.log "in edit"
         for note in data
           if !_.isEqual(note, editnote)
             scope.masterNotes.push note
       else 
+        console.log "in masters"
         scope.masterNotes = data
+      console.log scope.masterNotes
     request.error (err)->
       console.log err
   scope.getMasterNotes = ()->
@@ -539,22 +556,54 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
     scope.service = ""
     scope.master = ""
     scope.findmaster = ""
+    scope.requireminutes = 60
   scope.mins = (mins)->
     if mins < 10
       "0" + mins
     else
       mins
-  scope.checkInter = (time)->
-    noteTime = scope.timeOfDate(time)
-    mins = scope.minutes
-    if mins < 10
-      mins = "0"+mins
+  scope.checkInter = (note)->
+    time = new Date(note.time)
+    minutes = note.minutes
+    noteStartTime = time.getHours() + (time.getMinutes() / 100)
+    noteEndTime = Math.floor(time.getHours() + (time.getMinutes() + note.minutes)/ 60) + ((time.getMinutes() + note.minutes - (Math.floor((time.getMinutes() + note.minutes) / 60) * 60)) / 100)
+      # hours: Math.floor(time.getHours() + (time.getMinutes() + note.minutes)/ 60)
+      # minutes: time.getMinutes() + note.minutes - (Math.floor((time.getMinutes() + note.minutes) / 60) * 60)
+    # mins = scope.minutes
+    # if mins < 10
+    #   mins = "0"+mins
     # console.log time + " " + scope.hours+":"+mins
-    cur_time = scope.hours+":"+mins
-    if noteTime is cur_time
-      scope.intersection = true
+    startTime =  scope.hours + (scope.minutes / 100)
+      # hours: scope.hours,
+      # minutes: scope.minutes
+    mn = 60
+    if angular.isDefined scope.requireminutes and scope.requireminutes isnt null
+      mn = scope.requireminutes
+
+    endTime = Math.floor(scope.hours + (scope.minutes + mn) / 60) + ((scope.minutes + mn - (Math.floor((scope.minutes + mn) / 60) * 60)) / 100) 
+      # hours: Math.floor(scope.hours + (startTime.minutes + mn) / 60)
+      # minutes: startTime.minutes + mn - (Math.floor((startTime.minutes + mn) / 60) * 60)
+    # console.log startTime
+    # console.log endTime
+    # console.log noteStartTime
+    # console.log noteEndTime
+    # console.log startTime
+    # console.log endTime
+    if noteStartTime <= startTime and startTime <= noteEndTime
       return "intersection"
-    return ""
+    else if noteStartTime <= endTime and endTime <= noteEndTime
+      return "intersection"
+    else return ""
+    # scope.intersection = true
+    # return "intersection"
+  scope.unTill = (note)->
+    time = new Date note.time
+    hours = Math.floor(time.getHours() + (time.getMinutes() + note.minutes)/ 60)
+    minutes = time.getMinutes() + note.minutes - (Math.floor((time.getMinutes() + note.minutes) / 60) * 60)
+    if minutes < 9
+      minutes = "0" + minutes
+    hours + ":" + minutes
+
   scope.timeChange = ()->
     scope.intersection = false
   scope.saveNote = ()->
@@ -566,6 +615,7 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
       master : ""
       service: ""
       time : ""
+      minutes: ""
     }
     
     reg_date = dateService.getDate()
@@ -583,11 +633,16 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
     note.master = scope.master._id
     note.service = scope.service
     note.time = reg_date
+    if scope.requireminutes isnt undefined and scope.requireminutes isnt ""
+      note.minutes = scope.requireminutes
+    else 
+      note.minutes = 60
 
     if type is 'add'
       request = notesService.save note
       request.success (data)->
         scope.active = true
+        console.log data
       request.error (err)->
         console.log err
     else if type is 'edit'
@@ -609,27 +664,83 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
     scope.minutes = new Date(editnote.time).getMinutes()
   scope.newNote = ()->
     scope.active = false
+    scope.masterNotes = []
     clearFields()
   scope.formState = ()->
     if scope.active is true or scope.updated is true
       true
     false
 
+  scope.$watch ()->
+    dateService.getDate()
+  , (newDate)->
+    newOne = newDate.getFullYear() + " " + newDate.getMonth() + " " + newDate.getDate()
+    oldOne = current_date.getFullYear() + " " + current_date.getMonth() + " " + current_date.getDate()
+    if newOne isnt oldOne
+      console.log "not the same"
+      today = newDate
+      today.setHours(0)
+      today.setMinutes(0)
+      tomorrow = new Date(today.getTime() + (24 * 60 * 60 * 1000))
+      if angular.isDefined scope.master
+        params = {
+          start_date: today
+          end_date: tomorrow
+          master: scope.master._id
+        }
+        request = notesService.masterNotes params
+        request.success (data)->
+          scope.masterNotes = data
+        request.error (err)->
+          console.log err
+    else 
+      scope.oldDate = true
+      today = dateService.getDate()
+      today.setHours(0)
+      today.setMinutes(0)
+      tomorrow = new Date(today.getTime() + (24 * 60 * 60 * 1000))
+      if angular.isDefined scope.master
+        params = {
+          start_date : today
+          end_date : tomorrow
+          master : scope.master._id
+        }
+        request = notesService.masterNotes params
+        request.success (data)->
+          scope.masterNotes = data
+        request.error (err)->
+          console.log err
+
   return
 ]
-app.controller 'notesCtrl', ['$scope','notes','notesService','dateService', (scope, notes, notesService, dateService)->
-  console.log "notes ctrl"
+app.controller 'notesCtrl', ['$scope','notes','notesService','dateService','accountService', (scope, notes, notesService, dateService, accountService)->
+  console.log "notes ctrl launched"
   scope.notes = notes.data
   console.log scope.notes
   current_date = dateService.getDate()
   scope.oldDate = true
+  scope.payFormActive = false
   
+  account = ()->
+    client: {
+      name : ""
+      id : ""
+      savings: ""
+    },
+    master: "",
+    masterIncome: "",
+    payed : "",
+    materials: "",
+    forSaloon : "",
+    date : ""
+
   yearMontDay = (date)->
     res = new Date(date)
-    month = res.getMonth() + 1
-    if month < 10
-      month = "0" + month
-    res.getDate() + "/" + month + "/" + res.getFullYear()
+    res.setHours 0
+    res.setMinutes 0
+    res.setSeconds 0
+    res.setMilliseconds 0
+    res
   
   timeOfDate = (date)->
     res = new Date(date)
@@ -641,11 +752,11 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService', (sco
   scope.showTime = (date)->
     todayDate = yearMontDay new Date()
     selDate = yearMontDay new Date(date)
-    if todayDate is selDate
-      timeOfDate(date)
-    else
+    if todayDate > selDate
       scope.oldDate = false
-      selDate + " " + timeOfDate(date)
+    else 
+      scope.oldDate = true
+    timeOfDate(date)
   
   scope.changeDate = ()->
     console.log "changing date"
@@ -660,10 +771,59 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService', (sco
     if answer
       request = notesService.delete(id)
       request.success ()->
-        notesrequest = notesService.all()
+        params = 
+          start_date : dateService.getDate()
+          end_date : new Date(dateService.getDate().getTime() + (24 * 60 * 60 * 1000))
+        notesrequest = notesService.byDate(params)
         notesrequest.success (data)->
           scope.notes = data
+          console.log data
+  
+  scope.finishService = (note)->
+    console.log "opening"
+    scope.payFormActive = true
+    scope.selected_note = note
+    scope.price = 0
+    scope.materials = 0
+    scope.acc = new account()
+    scope.acc.client = note.client
+    scope.acc.master = note.master._id
+    scope.acc.date = note.time
+  
+  scope.closePayForm = ()->
+    if scope.payFormActive
+      scope.payFormActive = false
+      console.log "closing"
+  
+  scope.mastersPrice = ()->
+    if angular.isDefined(scope.price) and angular.isDefined(scope.materials)
+      scope.acc.masterIncome = (scope.price - scope.materials) * scope.selected_note.master.wageRate / 100
 
+  scope.saloonPrice = ()->
+    if angular.isDefined(scope.price) and angular.isDefined(scope.materials)
+      scope.acc.forSaloon = scope.price - scope.materials - scope.acc.masterIncome
+  
+  scope.clientSavings = ()->
+    if angular.isDefined(scope.price) and angular.isDefined(scope.materials)
+      scope.acc.client.savings = scope.price - scope.materials
+
+  scope.saveService = ()->
+    scope.acc.materials = scope.materials
+    scope.acc.payed = scope.price
+    console.log scope.acc
+    request = accountService.create scope.acc
+    request.success (data)->
+      console.log data
+      scope.payFormActive = false
+      scope.selected_note.complete = true
+      console.log scope.selected_note
+      note = scope.selected_note
+      note.id = scope.selected_note._id
+      reques = notesService.update(note)
+      reques.success ()->
+        console.log "Completed"
+
+  
   scope.$watch ()->
     dateService.getDate()
   , (newDate)->

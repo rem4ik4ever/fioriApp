@@ -41,6 +41,14 @@ module.exports = function(app){
 
    app.param('noteID', notes.note);
   
+   /*
+   * accounting routes
+   */
+
+   var account = require('../app/controllers/account');
+
+   app.post('/api/account', account.create);
+
   /*
    * App route
    */

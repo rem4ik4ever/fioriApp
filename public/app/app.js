@@ -126,6 +126,17 @@
     }
   ]);
 
+  app.factory('accountService', [
+    '$http', function(http) {
+      return {
+        create: function(account) {
+          var request;
+          return request = http.post('/api/account', account);
+        }
+      };
+    }
+  ]);
+
   app.factory('clientsService', [
     '$http', '$location', function(http, location) {
       var client_to_edit;
@@ -165,7 +176,7 @@
   app.factory('dateService', [
     function() {
       var noteDay;
-      noteDay = new Date;
+      noteDay = new Date();
       noteDay.setHours(0);
       noteDay.setMinutes(0);
       noteDay.setSeconds(0);
@@ -618,12 +629,14 @@
 
   app.controller('NoteCtrl', [
     '$scope', 'dateService', 'clientsService', 'notesService', 'param', function(scope, dateService, clientsService, notesService, param) {
-      var clearFields, editnote, months, setNote, type;
+      var clearFields, current_date, editnote, months, setNote, type;
       editnote = {};
       scope.active = false;
       scope.updated = false;
       type = param.type;
       console.log(type);
+      current_date = dateService.getDate();
+      scope.requireminutes = 60;
       if (param.type === 'add') {
         param.masters.success(function(data) {
           return scope.masters = data;
@@ -708,31 +721,36 @@
         return console.log("unregister user");
       };
       scope.setMaster = function(master) {
-        var params, request;
+        var params, request, start;
         scope.master = master;
         scope.findmaster = scope.master.name + " " + scope.master.surname;
+        start = dateService.getDate();
+        start.setHours(0);
+        start.setMinutes(0);
+        start.setSeconds(0);
+        start.setMilliseconds(0);
         params = {
           start_date: dateService.getDate(),
           end_date: new Date(dateService.getDate().getTime() + (24 * 60 * 60 * 1000)),
           master: scope.master._id
         };
+        console.log(params);
         request = notesService.masterNotes(params);
         request.success(function(data) {
-          var note, _i, _len, _results;
+          var note, _i, _len;
           if (param.type === 'edit') {
-            _results = [];
+            console.log("in edit");
             for (_i = 0, _len = data.length; _i < _len; _i++) {
               note = data[_i];
               if (!_.isEqual(note, editnote)) {
-                _results.push(scope.masterNotes.push(note));
-              } else {
-                _results.push(void 0);
+                scope.masterNotes.push(note);
               }
             }
-            return _results;
           } else {
-            return scope.masterNotes = data;
+            console.log("in masters");
+            scope.masterNotes = data;
           }
+          return console.log(scope.masterNotes);
         });
         return request.error(function(err) {
           return console.log(err);
@@ -749,7 +767,8 @@
         scope.minutes = "";
         scope.service = "";
         scope.master = "";
-        return scope.findmaster = "";
+        scope.findmaster = "";
+        return scope.requireminutes = 60;
       };
       scope.mins = function(mins) {
         if (mins < 10) {
@@ -758,19 +777,35 @@
           return mins;
         }
       };
-      scope.checkInter = function(time) {
-        var cur_time, mins, noteTime;
-        noteTime = scope.timeOfDate(time);
-        mins = scope.minutes;
-        if (mins < 10) {
-          mins = "0" + mins;
+      scope.checkInter = function(note) {
+        var endTime, minutes, mn, noteEndTime, noteStartTime, startTime, time;
+        time = new Date(note.time);
+        minutes = note.minutes;
+        noteStartTime = time.getHours() + (time.getMinutes() / 100);
+        noteEndTime = Math.floor(time.getHours() + (time.getMinutes() + note.minutes) / 60) + ((time.getMinutes() + note.minutes - (Math.floor((time.getMinutes() + note.minutes) / 60) * 60)) / 100);
+        startTime = scope.hours + (scope.minutes / 100);
+        mn = 60;
+        if (angular.isDefined(scope.requireminutes && scope.requireminutes !== null)) {
+          mn = scope.requireminutes;
         }
-        cur_time = scope.hours + ":" + mins;
-        if (noteTime === cur_time) {
-          scope.intersection = true;
+        endTime = Math.floor(scope.hours + (scope.minutes + mn) / 60) + ((scope.minutes + mn - (Math.floor((scope.minutes + mn) / 60) * 60)) / 100);
+        if (noteStartTime <= startTime && startTime <= noteEndTime) {
           return "intersection";
+        } else if (noteStartTime <= endTime && endTime <= noteEndTime) {
+          return "intersection";
+        } else {
+          return "";
         }
-        return "";
+      };
+      scope.unTill = function(note) {
+        var hours, minutes, time;
+        time = new Date(note.time);
+        hours = Math.floor(time.getHours() + (time.getMinutes() + note.minutes) / 60);
+        minutes = time.getMinutes() + note.minutes - (Math.floor((time.getMinutes() + note.minutes) / 60) * 60);
+        if (minutes < 9) {
+          minutes = "0" + minutes;
+        }
+        return hours + ":" + minutes;
       };
       scope.timeChange = function() {
         return scope.intersection = false;
@@ -785,7 +820,8 @@
           client: {},
           master: "",
           service: "",
-          time: ""
+          time: "",
+          minutes: ""
         };
         reg_date = dateService.getDate();
         reg_date.setHours(scope.hours);
@@ -801,10 +837,16 @@
         note.master = scope.master._id;
         note.service = scope.service;
         note.time = reg_date;
+        if (scope.requireminutes !== void 0 && scope.requireminutes !== "") {
+          note.minutes = scope.requireminutes;
+        } else {
+          note.minutes = 60;
+        }
         if (type === 'add') {
           request = notesService.save(note);
           request.success(function(data) {
-            return scope.active = true;
+            scope.active = true;
+            return console.log(data);
           });
           return request.error(function(err) {
             return console.log(err);
@@ -833,6 +875,7 @@
       };
       scope.newNote = function() {
         scope.active = false;
+        scope.masterNotes = [];
         return clearFields();
       };
       scope.formState = function() {
@@ -841,25 +884,89 @@
         }
         return false;
       };
+      scope.$watch(function() {
+        return dateService.getDate();
+      }, function(newDate) {
+        var newOne, oldOne, params, request, today, tomorrow;
+        newOne = newDate.getFullYear() + " " + newDate.getMonth() + " " + newDate.getDate();
+        oldOne = current_date.getFullYear() + " " + current_date.getMonth() + " " + current_date.getDate();
+        if (newOne !== oldOne) {
+          console.log("not the same");
+          today = newDate;
+          today.setHours(0);
+          today.setMinutes(0);
+          tomorrow = new Date(today.getTime() + (24 * 60 * 60 * 1000));
+          if (angular.isDefined(scope.master)) {
+            params = {
+              start_date: today,
+              end_date: tomorrow,
+              master: scope.master._id
+            };
+            request = notesService.masterNotes(params);
+            request.success(function(data) {
+              return scope.masterNotes = data;
+            });
+            return request.error(function(err) {
+              return console.log(err);
+            });
+          }
+        } else {
+          scope.oldDate = true;
+          today = dateService.getDate();
+          today.setHours(0);
+          today.setMinutes(0);
+          tomorrow = new Date(today.getTime() + (24 * 60 * 60 * 1000));
+          if (angular.isDefined(scope.master)) {
+            params = {
+              start_date: today,
+              end_date: tomorrow,
+              master: scope.master._id
+            };
+            request = notesService.masterNotes(params);
+            request.success(function(data) {
+              return scope.masterNotes = data;
+            });
+            return request.error(function(err) {
+              return console.log(err);
+            });
+          }
+        }
+      });
     }
   ]);
 
   app.controller('notesCtrl', [
-    '$scope', 'notes', 'notesService', 'dateService', function(scope, notes, notesService, dateService) {
-      var current_date, timeOfDate, yearMontDay;
-      console.log("notes ctrl");
+    '$scope', 'notes', 'notesService', 'dateService', 'accountService', function(scope, notes, notesService, dateService, accountService) {
+      var account, current_date, timeOfDate, yearMontDay;
+      console.log("notes ctrl launched");
       scope.notes = notes.data;
       console.log(scope.notes);
       current_date = dateService.getDate();
       scope.oldDate = true;
+      scope.payFormActive = false;
+      account = function() {
+        return {
+          client: {
+            name: "",
+            id: "",
+            savings: ""
+          },
+          master: "",
+          masterIncome: "",
+          payed: "",
+          materials: "",
+          forSaloon: "",
+          date: ""
+        };
+      };
       yearMontDay = function(date) {
-        var month, res;
+        var res;
         res = new Date(date);
-        month = res.getMonth() + 1;
-        if (month < 10) {
-          month = "0" + month;
-        }
-        return res.getDate() + "/" + month + "/" + res.getFullYear();
+        res.setHours(0);
+        res.setMinutes(0);
+        res.setSeconds(0);
+        res.setMilliseconds(0);
+        return res;
       };
       timeOfDate = function(date) {
         var minutes, res;
@@ -874,12 +981,12 @@
         var selDate, todayDate;
         todayDate = yearMontDay(new Date());
         selDate = yearMontDay(new Date(date));
-        if (todayDate === selDate) {
-          return timeOfDate(date);
-        } else {
+        if (todayDate > selDate) {
           scope.oldDate = false;
-          return selDate + " " + timeOfDate(date);
+        } else {
+          scope.oldDate = true;
         }
+        return timeOfDate(date);
       };
       scope.changeDate = function() {
         return console.log("changing date");
@@ -895,13 +1002,70 @@
         if (answer) {
           request = notesService["delete"](id);
           return request.success(function() {
-            var notesrequest;
-            notesrequest = notesService.all();
+            var notesrequest, params;
+            params = {
+              start_date: dateService.getDate(),
+              end_date: new Date(dateService.getDate().getTime() + (24 * 60 * 60 * 1000))
+            };
+            notesrequest = notesService.byDate(params);
             return notesrequest.success(function(data) {
-              return scope.notes = data;
+              scope.notes = data;
+              return console.log(data);
             });
           });
         }
+      };
+      scope.finishService = function(note) {
+        console.log("opening");
+        scope.payFormActive = true;
+        scope.selected_note = note;
+        scope.price = 0;
+        scope.materials = 0;
+        scope.acc = new account();
+        scope.acc.client = note.client;
+        scope.acc.master = note.master._id;
+        return scope.acc.date = note.time;
+      };
+      scope.closePayForm = function() {
+        if (scope.payFormActive) {
+          scope.payFormActive = false;
+          return console.log("closing");
+        }
+      };
+      scope.mastersPrice = function() {
+        if (angular.isDefined(scope.price) && angular.isDefined(scope.materials)) {
+          return scope.acc.masterIncome = (scope.price - scope.materials) * scope.selected_note.master.wageRate / 100;
+        }
+      };
+      scope.saloonPrice = function() {
+        if (angular.isDefined(scope.price) && angular.isDefined(scope.materials)) {
+          return scope.acc.forSaloon = scope.price - scope.materials - scope.acc.masterIncome;
+        }
+      };
+      scope.clientSavings = function() {
+        if (angular.isDefined(scope.price) && angular.isDefined(scope.materials)) {
+          return scope.acc.client.savings = scope.price - scope.materials;
+        }
+      };
+      scope.saveService = function() {
+        var request;
+        scope.acc.materials = scope.materials;
+        scope.acc.payed = scope.price;
+        console.log(scope.acc);
+        request = accountService.create(scope.acc);
+        return request.success(function(data) {
+          var note, reques;
+          console.log(data);
+          scope.payFormActive = false;
+          scope.selected_note.complete = true;
+          console.log(scope.selected_note);
+          note = scope.selected_note;
+          note.id = scope.selected_note._id;
+          reques = notesService.update(note);
+          return reques.success(function() {
+            return console.log("Completed");
+          });
+        });
       };
       return scope.$watch(function() {
         return dateService.getDate();

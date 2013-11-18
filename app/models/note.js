@@ -13,6 +13,7 @@ var NoteSchema = new Schema({
   },
   service : String,
   time: Date,
+  minutes: {type: Number, default: 60},
   complete: {type: Boolean, default: false}
 });
 

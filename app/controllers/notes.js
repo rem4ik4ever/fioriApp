@@ -24,7 +24,7 @@ exports.all = function(req, res){
 }
 exports.byDate = function(req, res){
   var params = req.body;
-  Note.find().where('time').gt(params.start_date).lt(params.end_date).populate('master', 'name surname').sort('time').exec(function(err, notes){
+  Note.find().where('time').gt(params.start_date).lt(params.end_date).populate('master', 'name surname wageRate').sort('time').exec(function(err, notes){
     if (err){
       res.jsonp('error', {
         status: 500

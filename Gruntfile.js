@@ -11,14 +11,17 @@ module.exports = function(grunt){
 		coffee: {
 			compile: {
 				files: {
-					'public/app/app.js': 'dev/coffee/*.coffee'
+					'public/app/app.js' : 'dev/coffee/*.coffee'
 				}
 			}
 		},
 		sass: {
 			dist: {
+				options: {
+					outputStyle: 'expanded'
+				},
 				files: {
-					'public/stylesheets/style.css': 'dev/sass/style.scss'
+					'public/stylesheets/style.css' : 'dev/sass/style.scss'
 				}
 			}
 		},
@@ -32,7 +35,7 @@ module.exports = function(grunt){
 			}
 		},
 		watch: {
-			js:{
+			coffee:{
 				files: ['dev/coffee/**/*.coffee'],
 				tasks: ['concat','coffee']
 			},
@@ -43,7 +46,7 @@ module.exports = function(grunt){
 		},
 		concurrent: {
 		  target: {
-		    tasks: ['nodemon', 'watch'],
+		    tasks: ['nodemon', 'watch:sass', 'watch:coffee'],
 		    options: {
 		      logConcurrentOutput: true
 		    }
@@ -60,7 +63,7 @@ module.exports = function(grunt){
 
 	grunt.loadNpmTasks('grunt-concurrent');
 
-	grunt.loadNpmTasks('grunt-contrib-sass');
+	grunt.loadNpmTasks('grunt-sass');
 
-	grunt.registerTask("default", ["concat","coffee", "sass", "concurrent"]);
+	grunt.registerTask("default", ["concat","coffee","sass","concurrent"]);
 };

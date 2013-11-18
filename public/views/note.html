@@ -49,15 +49,17 @@
       <div>Время:</div>
       <input type="number" min="8" max="21" ng-model="hours" ng-change="timeChange()" required>:
       <input type="number" min="0" max="59" ng-model="minutes" ng-change="timeChange()" required>
+      <div>Время выполнения: (в минутах)</div>
+      <input type="number" min="0" max="180" ng-model="requireminutes" placeholder="60" required>
     </div>
     <button type="submit">Добавить</button>
     <h3 ng-show="master">{{master.name}} {{master.surname}} записи на {{noteDate()}}</h3>
     <div class="schedule">
       <table>
-        <tr class="reg_note {{checkInter(mnotes.time)}}" ng-repeat="mnotes in getMasterNotes()">
+        <tr class="reg_note" ng-class="checkInter(mnotes)" ng-repeat="mnotes in getMasterNotes()">
           <td class="client">{{mnotes.client.name}}</td>
           <td>{{mnotes.service}}</td>
-          <td class="time">{{timeOfDate(mnotes.time)}}</td>
+          <td class="time">{{timeOfDate(mnotes.time)}} - {{unTill(mnotes)}}</td>
         </tr>
       </table>
     </div>

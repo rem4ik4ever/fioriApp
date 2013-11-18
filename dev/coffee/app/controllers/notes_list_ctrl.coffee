@@ -1,16 +1,31 @@
-app.controller 'notesCtrl', ['$scope','notes','notesService','dateService', (scope, notes, notesService, dateService)->
-  console.log "notes ctrl"
+app.controller 'notesCtrl', ['$scope','notes','notesService','dateService','accountService', (scope, notes, notesService, dateService, accountService)->
+  console.log "notes ctrl launched"
   scope.notes = notes.data
   console.log scope.notes
   current_date = dateService.getDate()
   scope.oldDate = true
+  scope.payFormActive = false
   
+  account = ()->
+    client: {
+      name : ""
+      id : ""
+      savings: ""
+    },
+    master: "",
+    masterIncome: "",
+    payed : "",
+    materials: "",
+    forSaloon : "",
+    date : ""
+
   yearMontDay = (date)->
     res = new Date(date)
-    month = res.getMonth() + 1
-    if month < 10
-      month = "0" + month
-    res.getDate() + "/" + month + "/" + res.getFullYear()
+    res.setHours 0
+    res.setMinutes 0
+    res.setSeconds 0
+    res.setMilliseconds 0
+    res
   
   timeOfDate = (date)->
     res = new Date(date)
@@ -22,11 +37,11 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService', (sco
   scope.showTime = (date)->
     todayDate = yearMontDay new Date()
     selDate = yearMontDay new Date(date)
-    if todayDate is selDate
-      timeOfDate(date)
-    else
+    if todayDate > selDate
       scope.oldDate = false
-      selDate + " " + timeOfDate(date)
+    else 
+      scope.oldDate = true
+    timeOfDate(date)
   
   scope.changeDate = ()->
     console.log "changing date"
@@ -41,10 +56,59 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService', (sco
     if answer
       request = notesService.delete(id)
       request.success ()->
-        notesrequest = notesService.all()
+        params = 
+          start_date : dateService.getDate()
+          end_date : new Date(dateService.getDate().getTime() + (24 * 60 * 60 * 1000))
+        notesrequest = notesService.byDate(params)
         notesrequest.success (data)->
           scope.notes = data
+          console.log data
+  
+  scope.finishService = (note)->
+    console.log "opening"
+    scope.payFormActive = true
+    scope.selected_note = note
+    scope.price = 0
+    scope.materials = 0
+    scope.acc = new account()
+    scope.acc.client = note.client
+    scope.acc.master = note.master._id
+    scope.acc.date = note.time
+  
+  scope.closePayForm = ()->
+    if scope.payFormActive
+      scope.payFormActive = false
+      console.log "closing"
+  
+  scope.mastersPrice = ()->
+    if angular.isDefined(scope.price) and angular.isDefined(scope.materials)
+      scope.acc.masterIncome = (scope.price - scope.materials) * scope.selected_note.master.wageRate / 100
 
+  scope.saloonPrice = ()->
+    if angular.isDefined(scope.price) and angular.isDefined(scope.materials)
+      scope.acc.forSaloon = scope.price - scope.materials - scope.acc.masterIncome
+  
+  scope.clientSavings = ()->
+    if angular.isDefined(scope.price) and angular.isDefined(scope.materials)
+      scope.acc.client.savings = scope.price - scope.materials
+
+  scope.saveService = ()->
+    scope.acc.materials = scope.materials
+    scope.acc.payed = scope.price
+    console.log scope.acc
+    request = accountService.create scope.acc
+    request.success (data)->
+      console.log data
+      scope.payFormActive = false
+      scope.selected_note.complete = true
+      console.log scope.selected_note
+      note = scope.selected_note
+      note.id = scope.selected_note._id
+      reques = notesService.update(note)
+      reques.success ()->
+        console.log "Completed"
+
+  
   scope.$watch ()->
     dateService.getDate()
   , (newDate)->
