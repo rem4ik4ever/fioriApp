@@ -12,7 +12,7 @@ exports.create = function(req, res){
 }
 exports.all = function(req, res){
   console.dir("all");
-  Note.find().populate('master', 'name surname').sort('time').exec(function(err, notes){
+  Note.find().populate('client.id', 'discount savings').populate('master', 'name surname').sort('time').exec(function(err, notes){
     if (err){
       res.jsonp('error', {
         status: 500
@@ -24,7 +24,7 @@ exports.all = function(req, res){
 }
 exports.byDate = function(req, res){
   var params = req.body;
-  Note.find().where('time').gt(params.start_date).lt(params.end_date).populate('master', 'name surname wageRate').sort('time').exec(function(err, notes){
+  Note.find().where('time').gt(params.start_date).lt(params.end_date).populate('client.id', 'discount savings').populate('master', 'name surname wageRate').sort('time').exec(function(err, notes){
     if (err){
       res.jsonp('error', {
         status: 500
@@ -36,7 +36,7 @@ exports.byDate = function(req, res){
 }
 exports.byDateMaster = function(req, res){
   var params = req.body;
-  Note.find().where('master').equals(params.master).where('time').gt(params.start_date).lt(params.end_date).populate('master', 'name surname').sort('time').exec(function(err, notes){
+  Note.find().where('master').equals(params.master).where('time').gt(params.start_date).lt(params.end_date).populate('client.id', 'discount savings').populate('master', 'name surname').sort('time').exec(function(err, notes){
     if (err){
       res.jsonp('error', {
         status: 500

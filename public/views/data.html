@@ -1,0 +1,31 @@
+<div class="search">Начальная дата: <input type="text" ng-model="q"></div>
+<div class="registration-list">
+  <div class="table">
+    <table>
+      <thead class="table-controls">
+        <tr>
+          <th class="num">#</th>
+          <th class="name">Клиент<i class="ion-arrow-up-b"></i></th>
+          <th class="master">Мастер</th>
+          <td>Доля мастера</td>
+          <th class="discount">Скидка</th>
+          <th class="savings">Счет</th>
+        </tr>
+      </thead>
+    </table>
+      <div class="inner-table">
+        <table>
+          <tr class="entry link slide-right" ng-repeat="client in clients | filter:q" ng-click="editUser(client)">
+            <td class="num">{{$index+1}}</td> 
+            <td class="name">{{client.name}} {{client.surname}}</td>
+            <td class="master"><div ng-repeat="master in client.masters">{{master}}</div></td>
+            <td class="phone">{{client.phone[showphone].number}}
+            <td class="discount">{{client.discount}}%</td>
+            <td class="savings">{{client.savings}} сом</td>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </table>
+  </div>
+</div>

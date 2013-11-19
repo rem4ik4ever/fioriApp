@@ -6,6 +6,7 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
   console.log type
   current_date = dateService.getDate()
   scope.requireminutes = 60
+  
   if param.type is 'add'
     param.masters.success (data)->
       scope.masters = data
@@ -115,35 +116,18 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
     minutes = note.minutes
     noteStartTime = time.getHours() + (time.getMinutes() / 100)
     noteEndTime = Math.floor(time.getHours() + (time.getMinutes() + note.minutes)/ 60) + ((time.getMinutes() + note.minutes - (Math.floor((time.getMinutes() + note.minutes) / 60) * 60)) / 100)
-      # hours: Math.floor(time.getHours() + (time.getMinutes() + note.minutes)/ 60)
-      # minutes: time.getMinutes() + note.minutes - (Math.floor((time.getMinutes() + note.minutes) / 60) * 60)
-    # mins = scope.minutes
-    # if mins < 10
-    #   mins = "0"+mins
-    # console.log time + " " + scope.hours+":"+mins
     startTime =  scope.hours + (scope.minutes / 100)
-      # hours: scope.hours,
-      # minutes: scope.minutes
     mn = 60
     if angular.isDefined scope.requireminutes and scope.requireminutes isnt null
       mn = scope.requireminutes
 
     endTime = Math.floor(scope.hours + (scope.minutes + mn) / 60) + ((scope.minutes + mn - (Math.floor((scope.minutes + mn) / 60) * 60)) / 100) 
-      # hours: Math.floor(scope.hours + (startTime.minutes + mn) / 60)
-      # minutes: startTime.minutes + mn - (Math.floor((startTime.minutes + mn) / 60) * 60)
-    # console.log startTime
-    # console.log endTime
-    # console.log noteStartTime
-    # console.log noteEndTime
-    # console.log startTime
-    # console.log endTime
     if noteStartTime <= startTime and startTime <= noteEndTime
       return "intersection"
     else if noteStartTime <= endTime and endTime <= noteEndTime
       return "intersection"
     else return ""
-    # scope.intersection = true
-    # return "intersection"
+
   scope.unTill = (note)->
     time = new Date note.time
     hours = Math.floor(time.getHours() + (time.getMinutes() + note.minutes)/ 60)

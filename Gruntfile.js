@@ -53,17 +53,8 @@ module.exports = function(grunt){
 		  }
 		}
 	});
-	grunt.loadNpmTasks('grunt-contrib-concat');
 
-	grunt.loadNpmTasks('grunt-nodemon');
-
-	grunt.loadNpmTasks('grunt-contrib-coffee');
-
-	grunt.loadNpmTasks('grunt-contrib-watch');
-
-	grunt.loadNpmTasks('grunt-concurrent');
-
-	grunt.loadNpmTasks('grunt-sass');
+	require('load-grunt-tasks')(grunt);
 
 	grunt.registerTask("default", ["concat","coffee","sass","concurrent"]);
 };

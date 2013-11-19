@@ -95,5 +95,4 @@ accounting : {
 
 	payed : 			# оплатчено											// оплачено
 
-	change : 			# сдача
 }

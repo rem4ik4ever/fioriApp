@@ -1032,25 +1032,35 @@
           return console.log("closing");
         }
       };
+      scope.toPay = function() {
+        var result;
+        if (angular.isDefined(scope.price)) {
+          result = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2);
+          return result;
+        }
+        return 0;
+      };
       scope.mastersPrice = function() {
         if (angular.isDefined(scope.price) && angular.isDefined(scope.materials)) {
-          return scope.acc.masterIncome = (scope.price - scope.materials) * scope.selected_note.master.wageRate / 100;
+          scope.acc.masterIncome = (scope.price - scope.materials) * scope.selected_note.master.wageRate / 100;
+          return scope.acc.masterIncome = scope.acc.masterIncome.toFixed(2);
         }
       };
       scope.saloonPrice = function() {
         if (angular.isDefined(scope.price) && angular.isDefined(scope.materials)) {
-          return scope.acc.forSaloon = scope.price - scope.materials - scope.acc.masterIncome;
+          scope.acc.forSaloon = scope.price - scope.materials - scope.acc.masterIncome;
+          return scope.acc.forSaloon = scope.acc.forSaloon.toFixed(2);
         }
       };
       scope.clientSavings = function() {
         if (angular.isDefined(scope.price) && angular.isDefined(scope.materials)) {
-          return scope.acc.client.savings = scope.price - scope.materials;
+          return scope.acc.client.savings = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2) - scope.materials;
         }
       };
       scope.saveService = function() {
         var request;
         scope.acc.materials = scope.materials;
-        scope.acc.payed = scope.price;
+        scope.acc.payed = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2);
         console.log(scope.acc);
         request = accountService.create(scope.acc);
         return request.success(function(data) {

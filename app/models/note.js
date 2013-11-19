@@ -5,7 +5,10 @@ var mongoose = require('mongoose'),
 var NoteSchema = new Schema({
   client : {
     name : String,
-    id : String,
+    id : {
+      type: Schema.ObjectId,
+      ref: 'Client'
+    }
   },
   master : {
     type: Schema.ObjectId,
@@ -21,7 +24,7 @@ NoteSchema.statics = {
   load: function(id, cb){
     this.findOne({
       _id : id
-    }).populate('master', 'surname name').exec(cb);
+    }).populate('client.id', 'discount').populate('master', 'surname name').exec(cb);
   }
 }
 
