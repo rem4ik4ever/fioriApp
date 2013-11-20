@@ -829,7 +829,6 @@
         reg_date.setSeconds(0);
         if (scope.unregister_client !== void 0 && scope.unregister_client !== "") {
           note.client.name = scope.unregister_client;
-          note.client.id = "";
         } else {
           note.client.name = scope.register_client;
           note.client.id = scope.client._id;
@@ -1035,32 +1034,53 @@
       scope.toPay = function() {
         var result;
         if (angular.isDefined(scope.price)) {
-          result = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2);
-          return result;
+          if (scope.selected_note.client.id !== null) {
+            result = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2);
+            return result;
+          } else {
+            return scope.price;
+          }
         }
         return 0;
       };
       scope.mastersPrice = function() {
         if (angular.isDefined(scope.price) && angular.isDefined(scope.materials)) {
-          scope.acc.masterIncome = (scope.price - scope.materials) * scope.selected_note.master.wageRate / 100;
-          return scope.acc.masterIncome = scope.acc.masterIncome.toFixed(2);
+          if (scope.selected_note.client.id !== null) {
+            scope.acc.masterIncome = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100).toFixed(2) - scope.materials) * scope.selected_note.master.wageRate / 100;
+            return scope.acc.masterIncome = scope.acc.masterIncome.toFixed(2);
+          } else {
+            scope.acc.masterIncome = (scope.price - scope.materials) * scope.selected_note.master.wageRate / 100;
+            return scope.acc.masterIncome = scope.acc.masterIncome.toFixed(2);
+          }
         }
       };
       scope.saloonPrice = function() {
         if (angular.isDefined(scope.price) && angular.isDefined(scope.materials)) {
-          scope.acc.forSaloon = scope.price - scope.materials - scope.acc.masterIncome;
+          if (scope.selected_note.client.id !== null) {
+            scope.acc.forSaloon = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100).toFixed(2) - scope.materials) - scope.acc.masterIncome;
+          } else {
+            scope.acc.forSaloon = scope.price - scope.materials - scope.acc.masterIncome;
+          }
           return scope.acc.forSaloon = scope.acc.forSaloon.toFixed(2);
         }
       };
       scope.clientSavings = function() {
         if (angular.isDefined(scope.price) && angular.isDefined(scope.materials)) {
-          return scope.acc.client.savings = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2) - scope.materials;
+          if (scope.selected_note.client.id !== null) {
+            return scope.acc.client.savings = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2) - scope.materials;
+          } else {
+            return 0;
+          }
         }
       };
       scope.saveService = function() {
         var request;
         scope.acc.materials = scope.materials;
-        scope.acc.payed = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2);
+        if (scope.selected_note.client.id !== null) {
+          scope.acc.payed = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2);
+        } else {
+          scope.acc.payed = scope.price;
+        }
         console.log(scope.acc);
         request = accountService.create(scope.acc);
         return request.success(function(data) {

@@ -157,7 +157,7 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
 
     if scope.unregister_client isnt undefined and scope.unregister_client isnt ""
       note.client.name = scope.unregister_client
-      note.client.id = ""
+      # note.client.id = ""
     else
       note.client.name = scope.register_client
       note.client.id = scope.client._id

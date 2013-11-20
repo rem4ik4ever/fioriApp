@@ -609,7 +609,7 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
 
     if scope.unregister_client isnt undefined and scope.unregister_client isnt ""
       note.client.name = scope.unregister_client
-      note.client.id = ""
+      # note.client.id = ""
     else
       note.client.name = scope.register_client
       note.client.id = scope.client._id
@@ -781,27 +781,43 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService','acco
   
   scope.toPay = ()->
     if angular.isDefined scope.price 
-      result = (scope.price - (scope.price * scope.selected_note.client.id.discount/100)).toFixed(2)
-      return result
+      if scope.selected_note.client.id isnt null
+        result = (scope.price - (scope.price * scope.selected_note.client.id.discount/100)).toFixed(2)
+        return result
+      else 
+        return scope.price
     return 0
 
   scope.mastersPrice = ()->
     if angular.isDefined(scope.price) and angular.isDefined(scope.materials)
-      scope.acc.masterIncome = (scope.price - scope.materials) * scope.selected_note.master.wageRate / 100
-      scope.acc.masterIncome = scope.acc.masterIncome.toFixed(2)      
+      if scope.selected_note.client.id isnt null
+        scope.acc.masterIncome = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100).toFixed(2) - scope.materials ) * scope.selected_note.master.wageRate / 100
+        scope.acc.masterIncome = scope.acc.masterIncome.toFixed(2)      
+      else 
+        scope.acc.masterIncome = (scope.price - scope.materials ) * scope.selected_note.master.wageRate / 100
+        scope.acc.masterIncome = scope.acc.masterIncome.toFixed(2)      
 
   scope.saloonPrice = ()->
     if angular.isDefined(scope.price) and angular.isDefined(scope.materials)
-      scope.acc.forSaloon = scope.price - scope.materials - scope.acc.masterIncome
+      if scope.selected_note.client.id isnt null
+        scope.acc.forSaloon = (scope.price - (scope.price * scope.selected_note.client.id.discount/100).toFixed(2) - scope.materials) - scope.acc.masterIncome
+      else
+        scope.acc.forSaloon = scope.price - scope.materials - scope.acc.masterIncome
       scope.acc.forSaloon = scope.acc.forSaloon.toFixed(2)
-  
+
   scope.clientSavings = ()->
     if angular.isDefined(scope.price) and angular.isDefined(scope.materials)
-      scope.acc.client.savings = (scope.price - (scope.price * scope.selected_note.client.id.discount/100)).toFixed(2) - scope.materials
+      if scope.selected_note.client.id isnt null
+        scope.acc.client.savings = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2) - scope.materials
+      else 
+        0
 
   scope.saveService = ()->
     scope.acc.materials = scope.materials
-    scope.acc.payed = (scope.price - (scope.price * scope.selected_note.client.id.discount/100)).toFixed(2)
+    if scope.selected_note.client.id isnt null
+      scope.acc.payed = (scope.price - (scope.price * scope.selected_note.client.id.discount/100)).toFixed(2)
+    else 
+      scope.acc.payed = scope.price
     console.log scope.acc
     request = accountService.create scope.acc
     request.success (data)->
@@ -815,7 +831,6 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService','acco
       reques.success ()->
         console.log "Completed"
 
-  
   scope.$watch ()->
     dateService.getDate()
   , (newDate)->

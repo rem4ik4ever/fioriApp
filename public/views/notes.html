@@ -40,7 +40,7 @@
   <form class="account-form" >
     <i class="closeform ion-close-circled" ng-click="closePayForm()"></i>
     <fieldset>
-      <legend>{{selected_note.client.name}}</legend><button type="submit">Добавить</button>
+      <legend>{{selected_note.client.name}} : <span ng-if="selected_note.client.id != null">{{selected_note.client.id.discount}} % скидка. {{selected_note.client.id.savings}} сом на счету</span></legend><button type="submit">Добавить</button>
       <table>
         <tr>
           <td>Стоймость услуги:</td>
