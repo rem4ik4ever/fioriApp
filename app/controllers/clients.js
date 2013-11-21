@@ -22,6 +22,7 @@ exports.all = function(req, res){
     }
   });
 }
+
 exports.update = function(req, res){
   var client = req.client;
   console.log("trying to update");
