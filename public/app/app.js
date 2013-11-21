@@ -113,7 +113,7 @@
           }
         }
       });
-      return routeProvider.when('/masters', {
+      routeProvider.when('/masters', {
         controller: 'mastersCtrl',
         templateUrl: 'views/masterslist.html',
         resolve: {
@@ -122,6 +122,10 @@
             return request = mastersService.all();
           }
         }
+      });
+      return routeProvider.when('/data', {
+        controller: 'dataCtrl',
+        templateUrl: 'views/data.html'
       });
     }
   ]);
@@ -438,6 +442,20 @@
   app.controller('addNoteCtrl', [
     '$scope', function(scope) {
       return console.log("add note ctrl");
+    }
+  ]);
+
+  app.controller('dataCtrl', [
+    '$scope', 'dateService', function(scope, dateService) {
+      var begin, end;
+      end = new Date();
+      begin = end;
+      begin.setDate(0);
+      begin.setHours(0);
+      begin.setMinutes(0);
+      begin.setSeconds(0);
+      console.log(end);
+      return console.log(begin);
     }
   ]);
 

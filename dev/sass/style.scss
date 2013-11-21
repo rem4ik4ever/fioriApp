@@ -216,6 +216,14 @@ button:active{
           width: 17%;
           text-align: center;
         }
+        .note-complete{
+          i{
+            float: right;
+            padding-right: 10px;
+            font-size: 1.1em;
+            color: #008000;
+          }
+        }
         .list-controls{
           font-size: 18px;
           float: right;
@@ -597,6 +605,22 @@ input::-webkit-inner-spin-button {
       @include border-radius(50%);
       cursor: pointer;
     }
+  }
+}
+.view-controls{
+  display: inline-block;
+  padding: 10px;
+  .dates{
+    display: inline-block;
+    font-size: 1.1em;
+    text-align: center;
+  }
+  .ion-ios7-search-strong{
+    font-size: 1.4em;
+    cursor: pointer;
+  }
+  .ion-ios7-search-strong:hover{
+    font-weight: bold;
   }
 }
 

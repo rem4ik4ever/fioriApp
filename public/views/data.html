@@ -1,27 +1,34 @@
-<div class="search">Начальная дата: <input type="text" ng-model="q"></div>
+<div class="view-controls">
+  <div class="dates">C <input type="date" ng-model="begin"></div>
+  <div class="dates"> по <input type="date" ng-model="end"></div>
+  <i class="ion-ios7-search-strong"></i>
+</div>
 <div class="registration-list">
   <div class="table">
     <table>
       <thead class="table-controls">
         <tr>
-          <th class="num">#</th>
-          <th class="name">Клиент<i class="ion-arrow-up-b"></i></th>
-          <th class="master">Мастер</th>
-          <td>Доля мастера</td>
-          <th class="discount">Скидка</th>
-          <th class="savings">Счет</th>
+          <th colspan="3">Приход</th>
+          <th colspan="2">Расход</th>
+        </tr>
+        <tr>
+          <th>#</th>
+          <th>общий</th>
+          <th>салон</th>
+          <th>мастер</th>
+          <th>материалы</th>
         </tr>
       </thead>
     </table>
       <div class="inner-table">
         <table>
-          <tr class="entry link slide-right" ng-repeat="client in clients | filter:q" ng-click="editUser(client)">
-            <td class="num">{{$index+1}}</td> 
-            <td class="name">{{client.name}} {{client.surname}}</td>
-            <td class="master"><div ng-repeat="master in client.masters">{{master}}</div></td>
-            <td class="phone">{{client.phone[showphone].number}}
-            <td class="discount">{{client.discount}}%</td>
-            <td class="savings">{{client.savings}} сом</td>
+          <tr class="entry link slide-right">
+            <td></td> 
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
             </td>
           </tr>
         </table>

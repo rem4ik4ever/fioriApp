@@ -92,4 +92,7 @@ app.config ['$routeProvider', (routeProvider)->
       masters: (mastersService)->
         request = mastersService.all()
     }
+  routeProvider.when '/data', {} =
+    controller: 'dataCtrl'
+    templateUrl: 'views/data.html'
 ]

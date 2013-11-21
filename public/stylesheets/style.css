@@ -173,6 +173,11 @@ button:active {
         .main .view .registration-list .table .savings {
           width: 17%;
           text-align: center; }
+        .main .view .registration-list .table .note-complete i {
+          float: right;
+          padding-right: 10px;
+          font-size: 1.1em;
+          color: green; }
         .main .view .registration-list .table .list-controls {
           font-size: 18px;
           float: right; }
@@ -496,6 +501,19 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
       -o-border-radius: 50%;
       border-radius: 50%;
       cursor: pointer; }
+
+.view-controls {
+  display: inline-block;
+  padding: 10px; }
+  .view-controls .dates {
+    display: inline-block;
+    font-size: 1.1em;
+    text-align: center; }
+  .view-controls .ion-ios7-search-strong {
+    font-size: 1.4em;
+    cursor: pointer; }
+  .view-controls .ion-ios7-search-strong:hover {
+    font-weight: bold; }
 
 /* ------------------------------------------- */
 /* Mixins
