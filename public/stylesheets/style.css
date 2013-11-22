@@ -174,8 +174,7 @@ button:active {
           width: 17%;
           text-align: center; }
         .main .view .registration-list .table .note-complete i {
-          float: right;
-          padding-right: 10px;
+          padding-left: 50%;
           font-size: 1.1em;
           color: green; }
         .main .view .registration-list .table .list-controls {

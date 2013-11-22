@@ -6,7 +6,7 @@ var NoteSchema = new Schema({
   client : {
     name : String,
     id : {
-      type: Number,
+      type: Schema.ObjectId,
       ref: 'Client'
     }
   },

@@ -860,6 +860,8 @@
           note.minutes = 60;
         }
         if (type === 'add') {
+          console.log("add");
+          console.log(note);
           request = notesService.save(note);
           request.success(function(data) {
             scope.active = true;
@@ -1052,7 +1054,7 @@
       scope.toPay = function() {
         var result;
         if (angular.isDefined(scope.price)) {
-          if (scope.selected_note.client.id !== void 0) {
+          if (scope.selected_note.client.id !== void 0 && scope.selected_note.client.id !== null) {
             result = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2);
             return result;
           } else {
@@ -1063,7 +1065,7 @@
       };
       scope.mastersPrice = function() {
         if (angular.isDefined(scope.price) && angular.isDefined(scope.materials)) {
-          if (scope.selected_note.client.id !== void 0) {
+          if (scope.selected_note.client.id !== void 0 && scope.selected_note.client.id !== null) {
             scope.acc.masterIncome = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100).toFixed(2) - scope.materials) * scope.selected_note.master.wageRate / 100;
             return scope.acc.masterIncome = scope.acc.masterIncome.toFixed(2);
           } else {
@@ -1074,7 +1076,7 @@
       };
       scope.saloonPrice = function() {
         if (angular.isDefined(scope.price) && angular.isDefined(scope.materials)) {
-          if (scope.selected_note.client.id !== void 0) {
+          if (scope.selected_note.client.id !== void 0 && scope.selected_note.client.id !== null) {
             scope.acc.forSaloon = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100).toFixed(2) - scope.materials) - scope.acc.masterIncome;
           } else {
             scope.acc.forSaloon = scope.price - scope.materials - scope.acc.masterIncome;
@@ -1084,7 +1086,7 @@
       };
       scope.clientSavings = function() {
         if (angular.isDefined(scope.price) && angular.isDefined(scope.materials)) {
-          if (scope.selected_note.client.id !== void 0) {
+          if (scope.selected_note.client.id !== void 0 && scope.selected_note.client.id !== null) {
             return scope.acc.client.savings = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2) - scope.materials;
           } else {
             return 0;
@@ -1095,7 +1097,7 @@
         var client, request;
         scope.acc.materials = scope.materials;
         client = scope.selected_note.client.id;
-        if (scope.selected_note.client.id !== void 0) {
+        if (scope.selected_note.client.id !== void 0 && scope.selected_note.client.id !== null) {
           scope.acc.payed = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2);
           client.savings += scope.acc.client.savings;
         } else {
@@ -1113,7 +1115,7 @@
           note.id = scope.selected_note._id;
           reques = notesService.update(note);
           return reques.success(function() {
-            if (client !== void 0) {
+            if (client !== void 0 && client !== null) {
               request = clientsService.update(client);
               request.success(function(data) {
                 return console.log("Client savings updated");

@@ -20,14 +20,11 @@
             <td class="client">{{note.client.name}}</td>
             <td class="type">{{note.service}}</td>
             <td class="master">{{note.master.name}} {{note.master.surname}}</td>
-            <td class="time">{{showTime(note.time)}}
+            <td class="time">{{showTime(note.time)}} <span class="note-complete" ng-hide="!note.complete"><i class="ion-checkmark-circled"></i></span>
               <div class="entry-controls" ng-show="oldDate&&!note.complete">
                 <a href="#/notes/edit/{{getId(note)}}"><i title="Редактировать" class="ion-ios7-compose edit"></i></a>
                 <i title="Выполнено" class="ion-checkmark-circled" ng-click="finishService(note)"></i>
                 <i title="Невыполнено/Удалить" class="ion-close-circled" ng-click="deleteNote(note)"></i>
-              </div>
-              <div ng-hide="!note.complete">
-                выполнено
               </div>
             </td>
           </tr>

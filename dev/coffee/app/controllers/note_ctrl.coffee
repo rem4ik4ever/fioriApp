@@ -171,6 +171,8 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
       note.minutes = 60
 
     if type is 'add'
+      console.log "add"
+      console.log note
       request = notesService.save note
       request.success (data)->
         scope.active = true
