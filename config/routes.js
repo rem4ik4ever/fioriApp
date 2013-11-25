@@ -48,6 +48,7 @@ module.exports = function(app){
    var account = require('../app/controllers/account');
 
    app.post('/api/account', account.create);
+   app.post('/api/account/bydate', account.byDate);
 
   /*
    * App route

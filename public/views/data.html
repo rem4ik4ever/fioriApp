@@ -1,7 +1,7 @@
 <div class="view-controls">
-  <div class="dates">C <input type="date" ng-model="begin"></div>
-  <div class="dates"> по <input type="date" ng-model="end"></div>
-  <i class="ion-ios7-search-strong"></i>
+  <div class="dates">C <input type="date" ng-model="begin" ng-change="showDate()"></div>
+  <div class="dates"> по <input type="date" ng-model="end" ng-change="showDate()"></div>
+  <i class="ion-ios7-search-strong" ng-click="find()"></i>
 </div>
 <div class="registration-list">
   <div class="table">
@@ -13,26 +13,24 @@
         </tr>
         <tr>
           <th>#</th>
-          <th>общий</th>
-          <th>салон</th>
-          <th>мастер</th>
-          <th>материалы</th>
+          <th>общий ( {{sum[0]}} )</th>
+          <th>салон ( {{sum[1]}} )</th>
+          <th>мастер ( {{sum[2]}} )</th>
+          <th>материалы ( {{sum[3]}} )</th>
         </tr>
       </thead>
     </table>
       <div class="inner-table">
         <table>
-          <tr class="entry link slide-right">
-            <td></td> 
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+          <tr class="entry link slide-right" ng-repeat="info in data">
+            <td>{{$index+1}}</td> 
+            <td>{{info.payed}}</td>
+            <td>{{info.forSaloon}}</td>
+            <td>{{info.masterIncome}}</td>
+            <td>{{info.materials}}</td>
             </td>
           </tr>
         </table>
       </div>
-    </table>
   </div>
 </div>

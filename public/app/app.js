@@ -177,6 +177,17 @@
     }
   ]);
 
+  app.factory('dataService', [
+    '$http', function(http) {
+      return {
+        byDate: function(params) {
+          var request;
+          return request = http.post('/api/account/bydate', params);
+        }
+      };
+    }
+  ]);
+
   app.factory('dateService', [
     function() {
       var noteDay;
@@ -446,16 +457,62 @@
   ]);
 
   app.controller('dataCtrl', [
-    '$scope', 'dateService', function(scope, dateService) {
-      var begin, end;
-      end = new Date();
-      begin = end;
-      begin.setDate(0);
-      begin.setHours(0);
-      begin.setMinutes(0);
-      begin.setSeconds(0);
-      console.log(end);
-      return console.log(begin);
+    '$scope', 'dateService', 'dataService', function(scope, dateService, dataService) {
+      var getTotals, setData;
+      scope.showDate = function() {
+        return console.log(scope.begin + " " + scope.end);
+      };
+      setData = function(data) {
+        scope.data = data;
+        return getTotals();
+      };
+      scope.find = function() {
+        var params, request;
+        if (angular.isDefined(scope.begin && angular.isDefined(scope.end))) {
+          scope.sum = [0, 0, 0, 0];
+          params = {
+            start_date: scope.begin,
+            end_date: scope.end
+          };
+          request = dataService.byDate(params);
+          return request.success(function(data) {
+            console.log(data);
+            return setData(data);
+          });
+        } else {
+          return alert('Пожалуйста заполните дату начала и конца');
+        }
+      };
+      scope.totalSpendings = function(one, two) {
+        return Number(one + Number(two));
+      };
+      return getTotals = function() {
+        var info, sum, tmp, _i, _j, _len, _len1, _ref, _ref1;
+        _ref = scope.data;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          info = _ref[_i];
+          if (angular.isDefined(info.payed)) {
+            scope.sum[0] += info.payed;
+          }
+          if (angular.isDefined(info.forSaloon)) {
+            scope.sum[1] += info.forSaloon;
+          }
+          if (angular.isDefined(info.masterIncome)) {
+            scope.sum[2] += info.masterIncome;
+          }
+          if (angular.isDefined(info.materials)) {
+            scope.sum[3] += info.materials;
+          }
+        }
+        tmp = [];
+        _ref1 = scope.sum;
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          sum = _ref1[_j];
+          tmp.push(sum.toFixed(2));
+        }
+        scope.sum = tmp;
+        return console.log(scope.sum);
+      };
     }
   ]);
 

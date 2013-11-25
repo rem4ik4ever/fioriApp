@@ -24,7 +24,7 @@ exports.all = function(req, res){
 }
 exports.byDate = function(req, res){
   var params = req.body;
-  Account.find().where('date').gt(params.start_date).lt(params.end_date).populate('master', 'name surname wageRate').sort('date').exec(function(err, account){
+  Account.find().where('date').gte(params.start_date).lte(params.end_date).populate('master', 'name surname wageRate').sort('date').exec(function(err, account){
     if (err){
       res.jsonp('error', {
         status: 500
@@ -36,7 +36,7 @@ exports.byDate = function(req, res){
 }
 exports.byDateMaster = function(req, res){
   var params = req.body;
-  Account.find().where('master').equals(params.master).where('date').gt(params.start_date).lt(params.end_date).populate('master', 'name surname').sort('date').exec(function(err, account){
+  Account.find().where('master').equals(params.master).where('date').gte(params.start_date).lte(params.end_date).populate('master', 'name surname').sort('date').exec(function(err, account){
     if (err){
       res.jsonp('error', {
         status: 500

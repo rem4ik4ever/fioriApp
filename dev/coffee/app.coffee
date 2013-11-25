@@ -123,6 +123,12 @@ app.factory 'clientsService', ['$http','$location', (http, location)->
       result = http.post '/api/clients/find', param
   }
 ]
+app.factory 'dataService', ['$http', (http)->
+	return {
+		byDate: (params)->
+			request = http.post '/api/account/bydate', params
+	}
+]
 app.factory 'dateService', [()->
   noteDay = new Date()
   noteDay.setHours 0
@@ -309,15 +315,42 @@ app.controller 'addNoteCtrl', ['$scope', (scope)->
 ]
 
 
-app.controller 'dataCtrl', ['$scope','dateService', (scope, dateService)->
-	end = new Date()
-	begin = end
-	begin.setDate 0
-	begin.setHours 0
-	begin.setMinutes 0
-	begin.setSeconds 0
-	console.log end
-	console.log begin
+app.controller 'dataCtrl', ['$scope','dateService','dataService', (scope, dateService, dataService)->
+	scope.showDate = ()->
+		console.log scope.begin + " " + scope.end
+	setData = (data)->
+		scope.data = data 
+		getTotals()
+	scope.find = ()->
+		if angular.isDefined scope.begin and angular.isDefined scope.end 
+			scope.sum = [0,0,0,0]
+			params = 
+				start_date: scope.begin
+				end_date: scope.end
+			request = dataService.byDate params
+			request.success (data)->
+				console.log data
+				setData data
+
+		else 
+			alert 'Пожалуйста заполните дату начала и конца'
+	scope.totalSpendings = (one, two)->
+		(Number) one + (Number) two
+	getTotals = ()->
+		for info in scope.data
+			if angular.isDefined info.payed
+				scope.sum[0] += info.payed
+			if angular.isDefined info.forSaloon
+				scope.sum[1] += info.forSaloon
+			if angular.isDefined info.masterIncome
+				scope.sum[2] += info.masterIncome
+			if angular.isDefined info.materials
+				scope.sum[3] += info.materials
+		tmp = []
+		for sum in scope.sum
+			tmp.push sum.toFixed(2)
+		scope.sum = tmp
+		console.log scope.sum
 ]
 app.controller 'MasterCtrl', ['$scope', 'mastersService','param', (scope, mastersService, param)->
   scope.active = true

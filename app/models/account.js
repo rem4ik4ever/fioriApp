@@ -10,7 +10,7 @@ var AccountSchema = new Schema({
 	master: {type: Schema.ObjectId, ref: 'Master'},
 	masterIncome: Number,
 	payed : Number,
-	meaterials : Number,
+	materials : Number,
 	forSaloon : Number,
 	date: Date
 });
