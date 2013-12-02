@@ -7,9 +7,13 @@ app.controller 'dataCtrl', ['$scope','dateService','dataService', (scope, dateSe
 	scope.find = ()->
 		if angular.isDefined scope.begin and angular.isDefined scope.end 
 			scope.sum = [0,0,0,0]
+			# console.log scope.end
+			start = new Date scope.begin
+			end = new Date scope.end
+			end.setHours 23
 			params = 
-				start_date: scope.begin
-				end_date: scope.end
+				start_date: start
+				end_date: end
 			request = dataService.byDate params
 			request.success (data)->
 				console.log data

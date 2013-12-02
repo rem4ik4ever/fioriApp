@@ -112,6 +112,8 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
     else
       mins
   scope.checkInter = (note)->
+    if note.time is editnote.time
+      return "editable"
     time = new Date(note.time)
     minutes = note.minutes
     noteStartTime = time.getHours() + (time.getMinutes() / 100)
@@ -123,8 +125,10 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
 
     endTime = Math.floor(scope.hours + (scope.minutes + mn) / 60) + ((scope.minutes + mn - (Math.floor((scope.minutes + mn) / 60) * 60)) / 100) 
     if noteStartTime <= startTime and startTime <= noteEndTime
+      scope.intersection = true
       return "intersection"
     else if noteStartTime <= endTime and endTime <= noteEndTime
+      scope.intersection = true
       return "intersection"
     else return ""
 
@@ -160,7 +164,7 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
       # note.client.id = ""
     else
       note.client.name = scope.register_client
-      note.client.id = scope.client._id
+      note.client.id = scope.client.id
 
     note.master = scope.master._id
     note.service = scope.service

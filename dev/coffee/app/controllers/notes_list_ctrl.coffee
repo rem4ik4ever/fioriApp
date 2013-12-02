@@ -113,12 +113,33 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService','acco
       else 
         0
 
+  checkDiscountIncrease = (savings, discount)->
+    console.log "Checking increase"
+    if savings > 25000
+      if discount < 10
+        console.log "Increased to 10%"
+        return 10
+    else if savings > 15000
+      if discount < 7
+        console.log "Increased to 7%"
+        return 7
+    else if savings > 10000
+      if discount < 5
+        console.log "Increased to 5%"
+        return 5
+    else if savings > 5000
+      if discount < 3
+        console.log "Increased to 3%"
+        return 3 
+
+
   scope.saveService = ()->
     scope.acc.materials = scope.materials
     client = scope.selected_note.client.id
     if scope.selected_note.client.id isnt undefined and scope.selected_note.client.id isnt null
       scope.acc.payed = (scope.price - (scope.price * scope.selected_note.client.id.discount/100)).toFixed(2)
       client.savings += scope.acc.client.savings
+      client.discount = checkDiscountIncrease(client.savings, client.discount);
     else 
       scope.acc.payed = scope.price
     console.log scope.acc

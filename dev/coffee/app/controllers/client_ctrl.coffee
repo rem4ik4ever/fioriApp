@@ -112,5 +112,11 @@ app.controller 'ClientCtrl', ['$scope', 'clientsService','param', (scope, client
     if scope.updated or scope.removed
       true
     else false
+
+  scope.checkCard = (num)->
+    if num isnt -1
+      return num
+    else "- "
+
   return
 ]

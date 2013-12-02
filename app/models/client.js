@@ -16,7 +16,8 @@ var ClientSchema = new Schema({
     service_type: String,
     material : String
   }],
-  reg_date: Date
+  reg_date: Date,
+  card_id: {type: Number, default: -1}
 });
 
 

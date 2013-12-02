@@ -435,6 +435,8 @@ button:active {
     .schedule table .intersection {
       background-color: #e34e4e;
       color: white; }
+    .schedule table .editable {
+      display: none; }
     .schedule table .highlight {
       background-color: #33be53;
       color: white; }

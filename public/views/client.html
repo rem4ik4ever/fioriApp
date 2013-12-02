@@ -1,6 +1,6 @@
-<div class="add-client-form">
+  <div class="add-client-form">
   <div class="client-card">
-    <span class="fio">{{client.surname}} {{client.name}} {{client.patronymic}}</span>
+    <span class="fio">{{client.surname}} {{client.name}} {{client.patronymic}} <span ng-show="client.card_id">(# {{checkCard(client.card_id)}})</span></span>
     <i class="added ion-checkmark" ng-hide="active"></i>
     <i class="added ion-thumbsup" ng-show="updated"></i>
     <i class="added red-icon ion-close-circled" ng-show="removed"></i>
@@ -49,6 +49,10 @@
           <td><input type="text" ng-model="client.patronymic"></td>
         </tr>
         <tr>
+          <td>Номер карты:</td>
+          <td><input type="number" ng-model="client.card_id" ng-value="client.card_id"></td>
+        </tr>
+        <tr>
           <td>Дата рождения *:</td>
           <td><input type="date" ng-model="birthday" ng-change="setBirthday()" ng-value="birthday" required></td>
         </tr>
@@ -67,6 +71,10 @@
         <tr>
           <td>Накопительный счет:</td>
           <td><input type="number" ng-model="client.savings"></td>
+        </tr>
+        <tr>
+          <td>Скидка</td>
+          <td><input type="number" ng-model="client.discount" min="0" max="10" placeholder="Выданная с картой клиента"></td>
         </tr>
       </table>
       <div>Постоянный мастер: <div class="input-field"><select ng-model="clientmaster">

@@ -293,6 +293,12 @@ app.controller 'ClientCtrl', ['$scope', 'clientsService','param', (scope, client
     if scope.updated or scope.removed
       true
     else false
+
+  scope.checkCard = (num)->
+    if num isnt -1
+      return num
+    else "- "
+
   return
 ]
 app.controller 'clientsCtrl', ['$scope','clients','clientsService', (scope, clients, clientsService)->
@@ -324,9 +330,13 @@ app.controller 'dataCtrl', ['$scope','dateService','dataService', (scope, dateSe
 	scope.find = ()->
 		if angular.isDefined scope.begin and angular.isDefined scope.end 
 			scope.sum = [0,0,0,0]
+			# console.log scope.end
+			start = new Date scope.begin
+			end = new Date scope.end
+			end.setHours 23
 			params = 
-				start_date: scope.begin
-				end_date: scope.end
+				start_date: start
+				end_date: end
 			request = dataService.byDate params
 			request.success (data)->
 				console.log data
@@ -356,7 +366,7 @@ app.controller 'MasterCtrl', ['$scope', 'mastersService','param', (scope, master
   scope.active = true
   scope.updated = false
   scope.removed = false
-  # Client class
+  # Master class
   master = ()->
     phone: [
       {
@@ -612,6 +622,8 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
     else
       mins
   scope.checkInter = (note)->
+    if note.time is editnote.time
+      return "editable"
     time = new Date(note.time)
     minutes = note.minutes
     noteStartTime = time.getHours() + (time.getMinutes() / 100)
@@ -623,8 +635,10 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
 
     endTime = Math.floor(scope.hours + (scope.minutes + mn) / 60) + ((scope.minutes + mn - (Math.floor((scope.minutes + mn) / 60) * 60)) / 100) 
     if noteStartTime <= startTime and startTime <= noteEndTime
+      scope.intersection = true
       return "intersection"
     else if noteStartTime <= endTime and endTime <= noteEndTime
+      scope.intersection = true
       return "intersection"
     else return ""
 
@@ -660,7 +674,7 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
       # note.client.id = ""
     else
       note.client.name = scope.register_client
-      note.client.id = scope.client._id
+      note.client.id = scope.client.id
 
     note.master = scope.master._id
     note.service = scope.service
@@ -862,12 +876,33 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService','acco
       else 
         0
 
+  checkDiscountIncrease = (savings, discount)->
+    console.log "Checking increase"
+    if savings > 25000
+      if discount < 10
+        console.log "Increased to 10%"
+        return 10
+    else if savings > 15000
+      if discount < 7
+        console.log "Increased to 7%"
+        return 7
+    else if savings > 10000
+      if discount < 5
+        console.log "Increased to 5%"
+        return 5
+    else if savings > 5000
+      if discount < 3
+        console.log "Increased to 3%"
+        return 3 
+
+
   scope.saveService = ()->
     scope.acc.materials = scope.materials
     client = scope.selected_note.client.id
     if scope.selected_note.client.id isnt undefined and scope.selected_note.client.id isnt null
       scope.acc.payed = (scope.price - (scope.price * scope.selected_note.client.id.discount/100)).toFixed(2)
       client.savings += scope.acc.client.savings
+      client.discount = checkDiscountIncrease(client.savings, client.discount);
     else 
       scope.acc.payed = scope.price
     console.log scope.acc

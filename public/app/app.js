@@ -426,6 +426,13 @@
           return false;
         }
       };
+      scope.checkCard = function(num) {
+        if (num !== -1) {
+          return num;
+        } else {
+          return "- ";
+        }
+      };
     }
   ]);
 
@@ -467,12 +474,15 @@
         return getTotals();
       };
       scope.find = function() {
-        var params, request;
+        var end, params, request, start;
         if (angular.isDefined(scope.begin && angular.isDefined(scope.end))) {
           scope.sum = [0, 0, 0, 0];
+          start = new Date(scope.begin);
+          end = new Date(scope.end);
+          end.setHours(23);
           params = {
-            start_date: scope.begin,
-            end_date: scope.end
+            start_date: start,
+            end_date: end
           };
           request = dataService.byDate(params);
           return request.success(function(data) {
@@ -854,6 +864,9 @@
       };
       scope.checkInter = function(note) {
         var endTime, minutes, mn, noteEndTime, noteStartTime, startTime, time;
+        if (note.time === editnote.time) {
+          return "editable";
+        }
         time = new Date(note.time);
         minutes = note.minutes;
         noteStartTime = time.getHours() + (time.getMinutes() / 100);
@@ -865,8 +878,10 @@
         }
         endTime = Math.floor(scope.hours + (scope.minutes + mn) / 60) + ((scope.minutes + mn - (Math.floor((scope.minutes + mn) / 60) * 60)) / 100);
         if (noteStartTime <= startTime && startTime <= noteEndTime) {
+          scope.intersection = true;
           return "intersection";
         } else if (noteStartTime <= endTime && endTime <= noteEndTime) {
+          scope.intersection = true;
           return "intersection";
         } else {
           return "";
@@ -906,7 +921,7 @@
           note.client.name = scope.unregister_client;
         } else {
           note.client.name = scope.register_client;
-          note.client.id = scope.client._id;
+          note.client.id = scope.client.id;
         }
         note.master = scope.master._id;
         note.service = scope.service;
@@ -1013,7 +1028,7 @@
 
   app.controller('notesCtrl', [
     '$scope', 'notes', 'notesService', 'dateService', 'accountService', 'clientsService', function(scope, notes, notesService, dateService, accountService, clientsService) {
-      var account, current_date, timeOfDate, yearMontDay;
+      var account, checkDiscountIncrease, current_date, timeOfDate, yearMontDay;
       console.log("notes ctrl launched");
       scope.notes = notes.data;
       console.log(scope.notes);
@@ -1150,6 +1165,30 @@
           }
         }
       };
+      checkDiscountIncrease = function(savings, discount) {
+        console.log("Checking increase");
+        if (savings > 25000) {
+          if (discount < 10) {
+            console.log("Increased to 10%");
+            return 10;
+          }
+        } else if (savings > 15000) {
+          if (discount < 7) {
+            console.log("Increased to 7%");
+            return 7;
+          }
+        } else if (savings > 10000) {
+          if (discount < 5) {
+            console.log("Increased to 5%");
+            return 5;
+          }
+        } else if (savings > 5000) {
+          if (discount < 3) {
+            console.log("Increased to 3%");
+            return 3;
+          }
+        }
+      };
       scope.saveService = function() {
         var client, request;
         scope.acc.materials = scope.materials;
@@ -1157,6 +1196,7 @@
         if (scope.selected_note.client.id !== void 0 && scope.selected_note.client.id !== null) {
           scope.acc.payed = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2);
           client.savings += scope.acc.client.savings;
+          client.discount = checkDiscountIncrease(client.savings, client.discount);
         } else {
           scope.acc.payed = scope.price;
         }

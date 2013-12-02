@@ -2,7 +2,7 @@ app.controller 'MasterCtrl', ['$scope', 'mastersService','param', (scope, master
   scope.active = true
   scope.updated = false
   scope.removed = false
-  # Client class
+  # Master class
   master = ()->
     phone: [
       {
