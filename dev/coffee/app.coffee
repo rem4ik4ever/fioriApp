@@ -179,6 +179,47 @@ app.factory 'notesService', ['$http', '$location', (http, location)->
       request = http.delete "/api/notes/"+id
   }
 ]
+app.controller 'birthdayCtrl', ['$scope','clientsService', (scope, clientsService)->
+	
+	bdsort = (a,b)->
+		bdayA = new Date(a.birthday)
+		bdayB = new Date(b.birthday)
+		if bdayA.getMonth() < bdayB.getMonth()
+			return -1
+		else if bdayA.getMonth() is bdayB.getMonth()
+			if bdayA.getDate() < bdayB.getDate()
+				return -1
+			else return 1
+		else 
+			return 1
+	
+	showBday = (date)->
+		bday = new Date(date)
+		months = ["Янв", "Фев", "Мар", "Апр", "Май", "Июнь", "Июль", "Авг", "Сент", "Окт", "Ноя", "Дек"]
+		return bday.getDate() + " " + months[bday.getMonth()]
+
+	request = clientsService.all()
+	request.success (data)->
+		clients = data
+		today = new Date()
+		for client in clients
+			d = new Date(client.birthday)
+			if d.getMonth() > today.getMonth()
+				clients.splice(clients.indexOf(client), 1)
+			else if d.getMonth() is today.getMonth()
+				if d.getDate() > today.getDate()
+					clients.splice(clients.indexOf(client), 1)
+		console.log clients
+		clients.sort(bdsort)
+		for client in clients
+			client.birthday = showBday(client.birthday)
+		scope.birthday_list = clients
+		console.log scope.birthday_list
+	request.error (data)->
+		console.log 'unable to get clients'
+
+
+]
 app.controller 'ClientCtrl', ['$scope', 'clientsService','param', (scope, clientsService, param)->
   console.log "add user ctrl"
   param.masters.success (data)->
@@ -674,7 +715,7 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
       # note.client.id = ""
     else
       note.client.name = scope.register_client
-      note.client.id = scope.client.id
+      note.client.id = scope.client._id
 
     note.master = scope.master._id
     note.service = scope.service
@@ -872,7 +913,7 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService','acco
   scope.clientSavings = ()->
     if angular.isDefined(scope.price) and angular.isDefined(scope.materials)
       if scope.selected_note.client.id isnt undefined and scope.selected_note.client.id isnt null
-        scope.acc.client.savings = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2) - scope.materials
+        scope.acc.client.savings = scope.price
       else 
         0
 
@@ -895,6 +936,12 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService','acco
         console.log "Increased to 3%"
         return 3 
 
+  scope.filterStatus = ()->
+    res = {}
+    res.complete = false
+    if scope.completeNote
+      return res
+    else undefined
 
   scope.saveService = ()->
     scope.acc.materials = scope.materials

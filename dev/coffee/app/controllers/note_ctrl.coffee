@@ -164,7 +164,7 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
       # note.client.id = ""
     else
       note.client.name = scope.register_client
-      note.client.id = scope.client.id
+      note.client.id = scope.client._id
 
     note.master = scope.master._id
     note.service = scope.service

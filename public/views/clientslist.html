@@ -1,4 +1,4 @@
-<div class="search">Быстрый поиск: <input type="text" ng-model="q"></div>
+<div class="search">Быстрый поиск: <input type="text" ng-model="q"> По номеру карты: <input type="text" ng-model="w.card_id"></div>
 <div class="registration-list">
   <div class="table">
     <table>
@@ -16,7 +16,7 @@
     </table>
       <div class="inner-table">
         <table>
-          <tr class="entry link slide-right" ng-repeat="client in clients | filter:q" ng-click="editUser(client)">
+          <tr class="entry link slide-right" ng-repeat="client in clients | filter:q | filter:w" ng-click="editUser(client)">
             <td class="num">{{$index+1}}</td>
             <td class="name">{{client.name}} {{client.surname}}</td>
             <td class="master"><div ng-repeat="master in client.masters">{{master}}</div></td>

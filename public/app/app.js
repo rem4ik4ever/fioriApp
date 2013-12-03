@@ -276,6 +276,62 @@
     }
   ]);
 
+  app.controller('birthdayCtrl', [
+    '$scope', 'clientsService', function(scope, clientsService) {
+      var bdsort, request, showBday;
+      bdsort = function(a, b) {
+        var bdayA, bdayB;
+        bdayA = new Date(a.birthday);
+        bdayB = new Date(b.birthday);
+        if (bdayA.getMonth() < bdayB.getMonth()) {
+          return -1;
+        } else if (bdayA.getMonth() === bdayB.getMonth()) {
+          if (bdayA.getDate() < bdayB.getDate()) {
+            return -1;
+          } else {
+            return 1;
+          }
+        } else {
+          return 1;
+        }
+      };
+      showBday = function(date) {
+        var bday, months;
+        bday = new Date(date);
+        months = ["Янв", "Фев", "Мар", "Апр", "Май", "Июнь", "Июль", "Авг", "Сент", "Окт", "Ноя", "Дек"];
+        return bday.getDate() + " " + months[bday.getMonth()];
+      };
+      request = clientsService.all();
+      request.success(function(data) {
+        var client, clients, d, today, _i, _j, _len, _len1;
+        clients = data;
+        today = new Date();
+        for (_i = 0, _len = clients.length; _i < _len; _i++) {
+          client = clients[_i];
+          d = new Date(client.birthday);
+          if (d.getMonth() > today.getMonth()) {
+            clients.splice(clients.indexOf(client), 1);
+          } else if (d.getMonth() === today.getMonth()) {
+            if (d.getDate() > today.getDate()) {
+              clients.splice(clients.indexOf(client), 1);
+            }
+          }
+        }
+        console.log(clients);
+        clients.sort(bdsort);
+        for (_j = 0, _len1 = clients.length; _j < _len1; _j++) {
+          client = clients[_j];
+          client.birthday = showBday(client.birthday);
+        }
+        scope.birthday_list = clients;
+        return console.log(scope.birthday_list);
+      });
+      return request.error(function(data) {
+        return console.log('unable to get clients');
+      });
+    }
+  ]);
+
   app.controller('ClientCtrl', [
     '$scope', 'clientsService', 'param', function(scope, clientsService, param) {
       var client, date, day, month, update, year;
@@ -921,7 +977,7 @@
           note.client.name = scope.unregister_client;
         } else {
           note.client.name = scope.register_client;
-          note.client.id = scope.client.id;
+          note.client.id = scope.client._id;
         }
         note.master = scope.master._id;
         note.service = scope.service;
@@ -1159,7 +1215,7 @@
       scope.clientSavings = function() {
         if (angular.isDefined(scope.price) && angular.isDefined(scope.materials)) {
           if (scope.selected_note.client.id !== void 0 && scope.selected_note.client.id !== null) {
-            return scope.acc.client.savings = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2) - scope.materials;
+            return scope.acc.client.savings = scope.price;
           } else {
             return 0;
           }
@@ -1187,6 +1243,16 @@
             console.log("Increased to 3%");
             return 3;
           }
+        }
+      };
+      scope.filterStatus = function() {
+        var res;
+        res = {};
+        res.complete = false;
+        if (scope.completeNote) {
+          return res;
+        } else {
+          return void 0;
         }
       };
       scope.saveService = function() {

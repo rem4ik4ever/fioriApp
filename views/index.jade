@@ -42,15 +42,10 @@ block content
       .client-list
         div.cl-header
           div.cl-header-title Ближайшие дни рождения:
-        div.list
+        div.list(ng-controller="birthdayCtrl")
           ul
-            li.client-card
-              div.name Ким Рем
+            li.client-card(ng-repeat="birthday in birthday_list")
+              div.name {{birthday.surname}} {{birthday.name}}
               div.info
-                div.master Мастер: Ким Диана 
-                div.account Накопительный счет: 1400 сом 
-            li.client-card
-              div.name Ким Рем
-              div.info
-                div.master Мастер: Ким Диана 
-                div.account Накопительный счет: 1400 сом 
+                div.master День рождение: {{birthday.birthday}}
+                div.account Счет: {{birthday.savings}} сом 

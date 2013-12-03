@@ -109,7 +109,7 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService','acco
   scope.clientSavings = ()->
     if angular.isDefined(scope.price) and angular.isDefined(scope.materials)
       if scope.selected_note.client.id isnt undefined and scope.selected_note.client.id isnt null
-        scope.acc.client.savings = (scope.price - (scope.price * scope.selected_note.client.id.discount / 100)).toFixed(2) - scope.materials
+        scope.acc.client.savings = scope.price
       else 
         0
 
@@ -132,6 +132,12 @@ app.controller 'notesCtrl', ['$scope','notes','notesService','dateService','acco
         console.log "Increased to 3%"
         return 3 
 
+  scope.filterStatus = ()->
+    res = {}
+    res.complete = false
+    if scope.completeNote
+      return res
+    else undefined
 
   scope.saveService = ()->
     scope.acc.materials = scope.materials
