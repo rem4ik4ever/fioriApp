@@ -1,4 +1,4 @@
-app.controller 'birthdayCtrl', ['$scope','clientsService', (scope, clientsService)->
+app.controller 'birthdayCtrl', ['$scope','clientsService', '$interval', (scope, clientsService, $interval)->
 	
 	bdsort = (a,b)->
 		bdayA = new Date(a.birthday)
@@ -16,26 +16,31 @@ app.controller 'birthdayCtrl', ['$scope','clientsService', (scope, clientsServic
 		bday = new Date(date)
 		months = ["Янв", "Фев", "Мар", "Апр", "Май", "Июнь", "Июль", "Авг", "Сент", "Окт", "Ноя", "Дек"]
 		return bday.getDate() + " " + months[bday.getMonth()]
-
-	request = clientsService.all()
-	request.success (data)->
-		clients = data
-		today = new Date()
-		for client in clients
-			d = new Date(client.birthday)
-			if d.getMonth() > today.getMonth()
-				clients.splice(clients.indexOf(client), 1)
-			else if d.getMonth() is today.getMonth()
-				if d.getDate() > today.getDate()
+	getBDays = ()->
+		request = clientsService.all()
+		request.success (data)->
+			console.log "success"
+			clients = data
+			today = new Date()
+			for client in clients
+				d = new Date(client.birthday)
+				if d.getMonth() > today.getMonth()
 					clients.splice(clients.indexOf(client), 1)
-		console.log clients
-		clients.sort(bdsort)
-		for client in clients
-			client.birthday = showBday(client.birthday)
-		scope.birthday_list = clients
-		console.log scope.birthday_list
-	request.error (data)->
-		console.log 'unable to get clients'
-
+				else if d.getMonth() is today.getMonth()
+					if d.getDate() > today.getDate()
+						clients.splice(clients.indexOf(client), 1)
+			console.log clients
+			clients.sort(bdsort)
+			for client in clients
+				client.birthday = showBday(client.birthday)
+			scope.birthday_list = clients
+			console.log scope.birthday_list
+		request.error (data)->
+			console.log 'unable to get clients'
+	getBDays()
+	console.log "starting"
+	$interval ()->
+		getBDays()
+	, 60000
 
 ]

@@ -277,8 +277,8 @@
   ]);
 
   app.controller('birthdayCtrl', [
-    '$scope', 'clientsService', function(scope, clientsService) {
-      var bdsort, request, showBday;
+    '$scope', 'clientsService', '$interval', function(scope, clientsService, $interval) {
+      var bdsort, getBDays, showBday;
       bdsort = function(a, b) {
         var bdayA, bdayB;
         bdayA = new Date(a.birthday);
@@ -301,34 +301,43 @@
         months = ["Янв", "Фев", "Мар", "Апр", "Май", "Июнь", "Июль", "Авг", "Сент", "Окт", "Ноя", "Дек"];
         return bday.getDate() + " " + months[bday.getMonth()];
       };
-      request = clientsService.all();
-      request.success(function(data) {
-        var client, clients, d, today, _i, _j, _len, _len1;
-        clients = data;
-        today = new Date();
-        for (_i = 0, _len = clients.length; _i < _len; _i++) {
-          client = clients[_i];
-          d = new Date(client.birthday);
-          if (d.getMonth() > today.getMonth()) {
-            clients.splice(clients.indexOf(client), 1);
-          } else if (d.getMonth() === today.getMonth()) {
-            if (d.getDate() > today.getDate()) {
+      getBDays = function() {
+        var request;
+        request = clientsService.all();
+        request.success(function(data) {
+          var client, clients, d, today, _i, _j, _len, _len1;
+          console.log("success");
+          clients = data;
+          today = new Date();
+          for (_i = 0, _len = clients.length; _i < _len; _i++) {
+            client = clients[_i];
+            d = new Date(client.birthday);
+            if (d.getMonth() > today.getMonth()) {
               clients.splice(clients.indexOf(client), 1);
+            } else if (d.getMonth() === today.getMonth()) {
+              if (d.getDate() > today.getDate()) {
+                clients.splice(clients.indexOf(client), 1);
+              }
             }
           }
-        }
-        console.log(clients);
-        clients.sort(bdsort);
-        for (_j = 0, _len1 = clients.length; _j < _len1; _j++) {
-          client = clients[_j];
-          client.birthday = showBday(client.birthday);
-        }
-        scope.birthday_list = clients;
-        return console.log(scope.birthday_list);
-      });
-      return request.error(function(data) {
-        return console.log('unable to get clients');
-      });
+          console.log(clients);
+          clients.sort(bdsort);
+          for (_j = 0, _len1 = clients.length; _j < _len1; _j++) {
+            client = clients[_j];
+            client.birthday = showBday(client.birthday);
+          }
+          scope.birthday_list = clients;
+          return console.log(scope.birthday_list);
+        });
+        return request.error(function(data) {
+          return console.log('unable to get clients');
+        });
+      };
+      getBDays();
+      console.log("starting");
+      return $interval(function() {
+        return getBDays();
+      }, 60000);
     }
   ]);
 
@@ -1225,22 +1234,22 @@
         console.log("Checking increase");
         if (savings > 25000) {
           if (discount < 10) {
-            console.log("Increased to 10%");
+            $.notify('Скидка увеличена до 10%!', 'success');
             return 10;
           }
         } else if (savings > 15000) {
           if (discount < 7) {
-            console.log("Increased to 7%");
+            $.notify('Скидка увеличена до 7%!', 'success');
             return 7;
           }
         } else if (savings > 10000) {
           if (discount < 5) {
-            console.log("Increased to 5%");
+            $.notify('Скидка увеличена до 5%!', 'success');
             return 5;
           }
         } else if (savings > 5000) {
           if (discount < 3) {
-            console.log("Increased to 3%");
+            $.notify('Скидка увеличена до 3%!', 'success');
             return 3;
           }
         }
