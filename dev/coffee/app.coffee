@@ -202,14 +202,16 @@ app.controller 'birthdayCtrl', ['$scope','clientsService', '$interval', (scope, 
 		request.success (data)->
 			console.log "success"
 			clients = data
+			console.log clients
 			today = new Date()
 			for client in clients
-				d = new Date(client.birthday)
-				if d.getMonth() > today.getMonth()
-					clients.splice(clients.indexOf(client), 1)
-				else if d.getMonth() is today.getMonth()
-					if d.getDate() > today.getDate()
+				if client is not undefined
+					d = new Date(client.birthday)
+					if d.getMonth() > today.getMonth()
 						clients.splice(clients.indexOf(client), 1)
+					else if d.getMonth() is today.getMonth()
+						if d.getDate() > today.getDate()
+							clients.splice(clients.indexOf(client), 1)
 			console.log clients
 			clients.sort(bdsort)
 			for client in clients
@@ -584,8 +586,6 @@ app.controller 'NoteCtrl', ['$scope','dateService','clientsService','notesServic
     date = dateService.getDate()
     year = date.getFullYear()
     month = date.getMonth()
-    if month < 10
-      month = "0" + month
     day = date.getDate()
     if day < 10
       day = "0" + day

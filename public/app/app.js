@@ -308,15 +308,18 @@
           var client, clients, d, today, _i, _j, _len, _len1;
           console.log("success");
           clients = data;
+          console.log(clients);
           today = new Date();
           for (_i = 0, _len = clients.length; _i < _len; _i++) {
             client = clients[_i];
-            d = new Date(client.birthday);
-            if (d.getMonth() > today.getMonth()) {
-              clients.splice(clients.indexOf(client), 1);
-            } else if (d.getMonth() === today.getMonth()) {
-              if (d.getDate() > today.getDate()) {
+            if (client === !void 0) {
+              d = new Date(client.birthday);
+              if (d.getMonth() > today.getMonth()) {
                 clients.splice(clients.indexOf(client), 1);
+              } else if (d.getMonth() === today.getMonth()) {
+                if (d.getDate() > today.getDate()) {
+                  clients.splice(clients.indexOf(client), 1);
+                }
               }
             }
           }
@@ -814,9 +817,6 @@
         date = dateService.getDate();
         year = date.getFullYear();
         month = date.getMonth();
-        if (month < 10) {
-          month = "0" + month;
-        }
         day = date.getDate();
         if (day < 10) {
           day = "0" + day;
