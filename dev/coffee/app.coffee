@@ -200,19 +200,17 @@ app.controller 'birthdayCtrl', ['$scope','clientsService', '$interval', (scope, 
 	getBDays = ()->
 		request = clientsService.all()
 		request.success (data)->
-			console.log "success"
 			clients = data
-			console.log clients
 			today = new Date()
+			console.log clients
 			for client in clients
-				if client is not undefined
+				if angular.isDefined client
 					d = new Date(client.birthday)
-					if d.getMonth() > today.getMonth()
+					if d.getMonth() < today.getMonth()
 						clients.splice(clients.indexOf(client), 1)
 					else if d.getMonth() is today.getMonth()
-						if d.getDate() > today.getDate()
+						if d.getDate() < today.getDate()
 							clients.splice(clients.indexOf(client), 1)
-			console.log clients
 			clients.sort(bdsort)
 			for client in clients
 				client.birthday = showBday(client.birthday)
@@ -267,6 +265,11 @@ app.controller 'ClientCtrl', ['$scope', 'clientsService','param', (scope, client
     else
       scope.birthday = year + '-0' + month + '-' + day
     console.log scope.birthday
+
+  scope.showBirthdayDate = (bd)->
+    months = ["Янв", "Фев", "Мар", "Апр", "Май", "Июнь", "Июль", "Авг", "Сент", "Окт", "Ноя", "Дек"]
+    data = bd.split "-"
+    return data[2] + " " + months[parseInt(data[1],10)-1] + " " + data[0]
 
   scope.saveClient = ()->
     if param.type is 'add'

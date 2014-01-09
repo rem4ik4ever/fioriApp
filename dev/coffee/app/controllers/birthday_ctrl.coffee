@@ -19,19 +19,17 @@ app.controller 'birthdayCtrl', ['$scope','clientsService', '$interval', (scope, 
 	getBDays = ()->
 		request = clientsService.all()
 		request.success (data)->
-			console.log "success"
 			clients = data
-			console.log clients
 			today = new Date()
+			console.log clients
 			for client in clients
-				if client is not undefined
+				if angular.isDefined client
 					d = new Date(client.birthday)
-					if d.getMonth() > today.getMonth()
+					if d.getMonth() < today.getMonth()
 						clients.splice(clients.indexOf(client), 1)
 					else if d.getMonth() is today.getMonth()
-						if d.getDate() > today.getDate()
+						if d.getDate() < today.getDate()
 							clients.splice(clients.indexOf(client), 1)
-			console.log clients
 			clients.sort(bdsort)
 			for client in clients
 				client.birthday = showBday(client.birthday)

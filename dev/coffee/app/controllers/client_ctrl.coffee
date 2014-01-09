@@ -39,6 +39,11 @@ app.controller 'ClientCtrl', ['$scope', 'clientsService','param', (scope, client
       scope.birthday = year + '-0' + month + '-' + day
     console.log scope.birthday
 
+  scope.showBirthdayDate = (bd)->
+    months = ["Янв", "Фев", "Мар", "Апр", "Май", "Июнь", "Июль", "Авг", "Сент", "Окт", "Ноя", "Дек"]
+    data = bd.split "-"
+    return data[2] + " " + months[parseInt(data[1],10)-1] + " " + data[0]
+
   scope.saveClient = ()->
     if param.type is 'add'
       scope.client.reg_date = new Date()

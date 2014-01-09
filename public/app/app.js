@@ -306,24 +306,22 @@
         request = clientsService.all();
         request.success(function(data) {
           var client, clients, d, today, _i, _j, _len, _len1;
-          console.log("success");
           clients = data;
-          console.log(clients);
           today = new Date();
+          console.log(clients);
           for (_i = 0, _len = clients.length; _i < _len; _i++) {
             client = clients[_i];
-            if (client === !void 0) {
+            if (angular.isDefined(client)) {
               d = new Date(client.birthday);
-              if (d.getMonth() > today.getMonth()) {
+              if (d.getMonth() < today.getMonth()) {
                 clients.splice(clients.indexOf(client), 1);
               } else if (d.getMonth() === today.getMonth()) {
-                if (d.getDate() > today.getDate()) {
+                if (d.getDate() < today.getDate()) {
                   clients.splice(clients.indexOf(client), 1);
                 }
               }
             }
           }
-          console.log(clients);
           clients.sort(bdsort);
           for (_j = 0, _len1 = clients.length; _j < _len1; _j++) {
             client = clients[_j];
@@ -390,6 +388,12 @@
         }
         console.log(scope.birthday);
       }
+      scope.showBirthdayDate = function(bd) {
+        var data, months;
+        months = ["Янв", "Фев", "Мар", "Апр", "Май", "Июнь", "Июль", "Авг", "Сент", "Окт", "Ноя", "Дек"];
+        data = bd.split("-");
+        return data[2] + " " + months[parseInt(data[1], 10) - 1] + " " + data[0];
+      };
       scope.saveClient = function() {
         var response;
         if (param.type === 'add') {
