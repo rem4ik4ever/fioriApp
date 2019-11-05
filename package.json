@@ -13,7 +13,7 @@
   "dependencies": {
     "express": "3.4.0",
     "jade": "*",
-    "mongoose": "~3.8.0",
+    "mongoose": "~5.7.8",
     "underscore": "~1.5.2"
   },
   "devDependencies": {
